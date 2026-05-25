@@ -40,6 +40,29 @@ import Layout from '../layouts/Layout.astro'
   <section class="page-about">
     <p>For over 6 years, I've collaborated with founders, studios, and product teams across Europe, Africa, and the US to design products and websites rooted in clarity and quiet confidence.</p>
     <p>I've led a full brand and website refresh for a San Francisco start-up to improve clarity and conversion, and driven product design across core workflows while building a scalable Design System for a Munich SaaS company.</p>
+
+    <div class="about-lists">
+      <div class="about-list">
+        <h2>WORKED WITH</h2>
+        <ul>
+          <li>eDiye</li>
+          <li>LevChary</li>
+          <li>Oni-ile</li>
+          <li>Outbound</li>
+          <li>Buff TV</li>
+        </ul>
+      </div>
+      <div class="about-list">
+        <h2>EXPERTISE</h2>
+        <ul>
+          <li>Product UX/UI</li>
+          <li>Web Design</li>
+          <li>Shopify Development</li>
+          <li>Framer Developer</li>
+          <li>Email Design</li>
+        </ul>
+      </div>
+    </div>
   </section>
 </Layout>
 
@@ -150,9 +173,38 @@ import Layout from '../layouts/Layout.astro'
       font: 200 1.5rem / 1.7 font-family(editorial);
       color: color(secondary);
       margin: 0 0 2rem;
+    }
+  }
 
-      &:last-child {
-        margin: 0;
+  .about-lists {
+    display: flex;
+    gap: 6rem;
+    margin-top: 4rem;
+    max-width: 40rem;
+    width: 100%;
+
+    @include mq(phone) {
+      flex-direction: column;
+      gap: 3rem;
+    }
+  }
+
+  .about-list {
+    h2 {
+      font: 700 0.75rem / 1 font-family(fraktion);
+      letter-spacing: 0.15em;
+      color: color(secondary);
+      margin: 0 0 1rem;
+    }
+
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+
+      li {
+        font: 200 1.25rem / 1.8 font-family(editorial);
+        color: color(secondary);
       }
     }
   }
