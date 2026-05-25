@@ -1,10 +1,34 @@
 ---
-import AWaves from './AWaves.astro'
 import ASeparator from './ASeparator.astro'
 ---
 
 <div class="s-hero" data-intersect>
-  <AWaves class="s__waves" />
+  <div class="gallery js-gallery">
+    <div class="gallery__header">
+      <div class="gallery__text">
+        <p>In a future</p>
+      </div>
+      <div class="gallery__text">
+        <p>not too distant</p>
+      </div>
+    </div>
+    <div class="gallery__grid js-gallery-grid">
+      <div class="gallery__img"><img src="/images/gallery/01.png" alt="" /></div>
+      <div class="gallery__img"><img src="/images/gallery/02.png" alt="" /></div>
+      <div class="gallery__img"><img src="/images/gallery/03.png" alt="" /></div>
+      <div class="gallery__img"><img src="/images/gallery/04.png" alt="" /></div>
+      <div class="gallery__img"><img src="/images/gallery/05.jpeg" alt="" /></div>
+      <div class="gallery__img"><img src="/images/gallery/06.jpeg" alt="" /></div>
+      <div class="gallery__img"><img src="/images/gallery/07.jpeg" alt="" /></div>
+      <div class="gallery__img"><img src="/images/gallery/08.jpeg" alt="" /></div>
+      <div class="gallery__img"><img src="/images/gallery/09.jpeg" alt="" /></div>
+      <div class="gallery__img"><img src="/images/gallery/10.png" alt="" /></div>
+      <div class="gallery__img"><img src="/images/gallery/11.jpeg" alt="" /></div>
+      <div class="gallery__img"><img src="/images/gallery/01.png" alt="" /></div>
+      <div class="gallery__img"><img src="/images/gallery/02.png" alt="" /></div>
+      <div class="gallery__img"><img src="/images/gallery/03.png" alt="" /></div>
+    </div>
+  </div>
 
   <div class="s__content js-content">
     <ASeparator
@@ -34,280 +58,122 @@ import ASeparator from './ASeparator.astro'
 </div><!-- .s-hero -->
 
 <script>
-  import Emitter from '../utils/Emitter'
-  import Ticker from '../utils/Ticker'
-
   import { gsap } from 'gsap'
-  import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin'
-  import { SplitText } from 'gsap/SplitText'
-  gsap.registerPlugin(DrawSVGPlugin, SplitText)
 
-  class Section {
-    el: HTMLElement
-    words: NodeListOf<HTMLElement>
+  const positions = [
+    { top: '0%', left: '0%' },
+    { top: '0%', left: '10%' },
+    { top: '0%', left: '60%' },
+    { top: '16%', left: '15%' },
+    { top: '16%', left: '40%' },
+    { top: '16%', left: '90%' },
+    { top: '32%', left: '50%' },
+    { top: '32%', left: '75%' },
+    { top: '48%', left: '0%' },
+    { top: '64%', left: '30%' },
+    { top: '64%', left: '50%' },
+    { top: '64%', left: '90%' },
+    { top: '80%', left: '20%' },
+    { top: '80%', left: '70%' },
+  ]
 
-    isPaused: boolean
-    isWaiting: boolean
-    st: SplitText
+  document.addEventListener('intro', () => {
+    const el = document.querySelector('.s-hero')
+    const imgs = el.querySelectorAll('.gallery__img')
+    const header = el.querySelector('.gallery__header')
+    const border = el.querySelector('.js-border')
+    const content = el.querySelector('.js-content')
 
-    /**
-     * Constructor
-     */
-    constructor() {
-      // Elements
-      this.el = document.querySelector('.s-hero')
-      this.words = this.el.querySelectorAll('.js-word')
+    const tl = gsap.timeline()
 
-      // Properties
-      this.isPaused = true
-      this.isWaiting = true
+    tl.set(el, { opacity: 1 }, 0)
 
-      // Init
-      if (document.readyState === 'complete') {
-        Ticker.nextTick(this.init, this)
-      } else {
-        Emitter.once('siteLoaded', this.init, this)
-      }
-    }
+    tl.to(
+      border,
+      {
+        scaleY: 0.025,
+        y: -content.clientHeight,
+        duration: 1,
+        ease: 'expo.inOut',
+      },
+      0
+    )
 
-    /**
-     * Init
-     */
-    init() {
-      this.splitWords()
+    tl.fromTo(
+      content,
+      {
+        clipPath: 'polygon(0 0, 100% 0, 100% 0, 0 0)',
+      },
+      {
+        clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)',
+        duration: 1,
+        ease: 'expo.inOut',
+      },
+      1
+    )
 
-      this.bindEvents()
-    }
+    tl.to(
+      border,
+      {
+        scaleY: 1,
+        y: 0,
+        duration: 1,
+        ease: 'expo.inOut',
+      },
+      1
+    )
 
-    /**
-     * Bind events
-     */
-    bindEvents() {
-      Emitter.on('resize', this.onResize, this)
+    tl.set(imgs, {
+      top: '45%',
+      left: '50%',
+      xPercent: -50,
+      yPercent: -50,
+      scale: 0,
+    }, 0)
 
-      document.addEventListener('intro', this.intro.bind(this), { once: true })
+    tl.from('p', {
+      y: 40,
+      ease: 'power4.inOut',
+      duration: 1,
+      stagger: { amount: 0.15 },
+      delay: 0.5,
+    }, 0)
 
-      this.el.addEventListener('intersect', this.onIntersect.bind(this), {
-        passive: true,
-      })
+    tl.to(imgs, {
+      scale: 1,
+      width: '300px',
+      height: '400px',
+      stagger: 0.15,
+      duration: 0.75,
+      ease: 'power2.out',
+      delay: 1,
+      onComplete: () => {
+        gsap.to(imgs, {
+          top: (i) => positions[i].top,
+          left: (i) => positions[i].left,
+          xPercent: 0,
+          yPercent: 0,
+          transform: 'none',
+          width: '75px',
+          height: '100px',
+          stagger: 0.075,
+          duration: 0.75,
+          ease: 'power2.out',
+        })
+      },
+    }, 0)
 
-      Emitter.on('tick', this.tick, this)
-    }
-
-    /**
-     * Intersect handler
-     */
-    onIntersect(e) {
-      this.isPaused = !e.detail.isIntersecting
-
-      if (this.isPaused) {
-        Emitter.off('tick', this.tick, this)
-      } else {
-        Emitter.on('tick', this.tick, this)
-      }
-    }
-
-    /**
-     * Resize handler
-     */
-    onResize() {
-      this.splitWords()
-    }
-
-    /**
-     * Intro
-     */
-    intro() {
-      const waves = this.el.querySelector('a-waves')
-      const lines = waves.querySelectorAll('.js-line')
-      const content = this.el.querySelector('.js-content')
-      const border = this.el.querySelector('.js-border')
-      const chars = content.querySelectorAll('.char__inner')
-      const separators = content.querySelectorAll('.js-separator')
-      const star = content.querySelector('.js-star')
-
-      const tl = gsap.timeline()
-
-      tl.fromTo(
-        lines,
-        {
-          drawSVG: '100% 100%',
-        },
-        {
-          drawSVG: '0% 100%',
-          duration: 3,
-          ease: 'expo.out',
-          stagger: {
-            amount: 0.5,
-            from: 'edges',
-            ease: 'power3.inOut',
-          },
-        },
-        0.5
-      )
-
-      tl.call(() => {
-        waves.dispatchEvent(new CustomEvent('introend'))
-      }, null, '-=1')
-
-      tl.set(
-        this.el,
-        {
-          opacity: 1,
-        },
-        0
-      )
-
-      tl.to(
-        border,
-        {
-          scaleY: 0.025,
-          y: -content.clientHeight,
-          duration: 1,
-          ease: 'expo.inOut',
-        },
-        0
-      )
-
-      tl.from(
-        waves,
-        {
-          y: '100%',
-          duration: 1.35,
-          ease: 'expo.out',
-        },
-        0
-      )
-
-      tl.fromTo(
-        content,
-        {
-          clipPath: 'polygon(0 0, 100% 0, 100% 0, 0 0)',
-        },
-        {
-          clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)',
-          duration: 1,
-          ease: 'expo.inOut',
-        },
-        1
-      )
-
-      tl.to(
-        border,
-        {
-          scaleY: 1,
-          y: 0,
-          duration: 1,
-          ease: 'expo.inOut',
-        },
-        1
-      )
-
-      tl.from(
-        star,
-        {
-          rotate: 90,
-          duration: 2,
-          ease: 'expo.out',
-        },
-        1.5
-      )
-
-      tl.fromTo(
-        chars,
-        {
-          y: '-200%',
-        },
-        {
-          y: '-100%',
-          duration: 2,
-          ease: 'expo.inOut',
-          stagger: 0.02,
-        },
-        0.45
-      )
-
-      tl.from(
-        separators,
-        {
-          y: (index) => (index % 2 === 0 ? '-100%' : '100%'),
-          duration: 1.5,
-          ease: 'expo.inOut',
-        },
-        0.75
-      )
-
-      tl.call(() => {
-        this.isWaiting = false
-      })
-    }
-
-    /**
-     * Split words
-     */
-    splitWords() {
-      if (this.st) {
-        this.st.revert()
-      }
-
-      this.st = new SplitText(this.words, {
-        type: 'words,chars',
-        charsClass: 'char',
-        wordsClass: 'word',
-      })
-
-      this.st.chars.forEach((char: HTMLElement, index) => {
-        const letter = char.textContent
-
-        char.classList.add('char--' + letter)
-
-        const inner = document.createElement('span')
-        inner.classList.add('char__inner')
-
-        inner.dataset.letter = letter.toUpperCase()
-        inner.innerHTML = letter
-
-        char.innerHTML = inner.outerHTML
-      })
-    }
-
-    /**
-     * Animate char
-     */
-    animateChar() {
-      if (this.isWaiting || Math.random() > 0.01) return
-
-      const char =
-        this.st.chars[Math.floor(Math.random() * this.st.chars.length)]
-
-      if (
-        char.classList.contains('to-top') ||
-        char.classList.contains('to-right') ||
-        char.classList.contains('to-bottom') ||
-        char.classList.contains('to-left')
-      )
-        return
-
-      const direction = Math.floor(Math.random() * 4)
-
-      const className = 'to-' + ['bottom', 'left', 'top', 'right'][direction]
-
-      char.classList.add(className)
-
-      setTimeout(() => {
-        char.classList.remove(className)
-      }, 2000)
-    }
-
-    /**
-     * Tick
-     */
-    tick() {
-      this.animateChar()
-    }
-  }
-
-  new Section()
+    tl.to('p', {
+      top: '40px',
+      ease: 'power4.inOut',
+      duration: 1,
+      stagger: { amount: 0.15 },
+      delay: 3,
+      onComplete: () => {
+        header.remove()
+      },
+    }, 0)
+  })
 </script>
 
 <style lang="scss">
@@ -326,12 +192,58 @@ import ASeparator from './ASeparator.astro'
       min-height: calc(100svh - 4.5rem - 1px);
     }
 
-    .s__waves {
+    .gallery {
+      position: relative;
       width: 100%;
-      height: 100%;
-
       flex-grow: 1;
       flex-shrink: 1;
+      overflow: hidden;
+      background: color(primary);
+
+      &__header {
+        position: absolute;
+        width: 100%;
+        top: 50%;
+        transform: translateY(-50%);
+        display: flex;
+        justify-content: space-around;
+        z-index: 2;
+        pointer-events: none;
+      }
+
+      &__text {
+        position: relative;
+        width: max-content;
+        height: max-content;
+        padding: 10px;
+
+        p {
+          position: relative;
+          font: 200 1rem / 1 font-family(editorial);
+          color: color(secondary);
+          margin: 0;
+        }
+      }
+
+      &__grid {
+        width: 100%;
+        height: 100%;
+        position: relative;
+      }
+
+      &__img {
+        width: 75px;
+        height: 100px;
+        overflow: hidden;
+        position: absolute;
+        margin: 20px;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
     }
 
     .s__border {
@@ -393,7 +305,6 @@ import ASeparator from './ASeparator.astro'
 
       @include mq(tablet) {
         padding: 1rem;
-        // align-items: center;
         flex-wrap: wrap;
         justify-content: flex-start;
 
@@ -425,67 +336,22 @@ import ASeparator from './ASeparator.astro'
         margin: 0 2rem;
 
         @include mq(tablet) {
-          // display: none;
           margin: 0 0 0 auto;
           width: 0.375em;
           height: auto;
         }
       }
 
-      @keyframes s-hero-move-to-left {
-        0% {
-          transform: translate3d(0, 0, 0);
-        }
-
-        100% {
-          transform: translate3d(100%, 0, 0);
-        }
-      }
-
-      @keyframes s-hero-move-to-right {
-        0% {
-          transform: translate3d(0, 0, 0);
-        }
-
-        100% {
-          transform: translate3d(-100%, 0, 0);
-        }
-      }
-
-      @keyframes s-hero-move-to-top {
-        0% {
-          transform: translate3d(0, 0, 0);
-        }
-
-        100% {
-          transform: translate3d(0, -100%, 0);
-        }
-      }
-
-      @keyframes s-hero-move-to-bottom {
-        0% {
-          transform: translate3d(0, 0, 0);
-        }
-
-        100% {
-          transform: translate3d(0, 100%, 0);
-        }
-      }
-
       :global(.char) {
         clip-path: inset(0 0.005em);
-
         color: transparent;
       }
 
       :global(.char__inner) {
         position: relative;
         top: 0.0725em;
-
         display: block;
-
         color: transparent;
-
         will-change: transform;
 
         @at-root {
@@ -507,11 +373,8 @@ import ASeparator from './ASeparator.astro'
           position: absolute;
           top: 0;
           left: 50%;
-
           transform: translate3d(-50%, 0, 0);
-
           color: color(secondary);
-
           content: attr(data-letter) attr(data-letter) attr(data-letter);
         }
 
@@ -519,12 +382,9 @@ import ASeparator from './ASeparator.astro'
           position: absolute;
           top: 50%;
           left: 0;
-
           transform: translate3d(0, -50%, 0);
-
           color: color(secondary);
           word-break: break-all;
-
           content: attr(data-letter) attr(data-letter) attr(data-letter);
         }
       }
@@ -547,6 +407,26 @@ import ASeparator from './ASeparator.astro'
 
       :global(.to-left .char__inner) {
         animation: s-hero-move-to-left 1s ease(in-out-quint) 1 forwards;
+      }
+
+      @keyframes s-hero-move-to-left {
+        0% { transform: translate3d(0, 0, 0); }
+        100% { transform: translate3d(100%, 0, 0); }
+      }
+
+      @keyframes s-hero-move-to-right {
+        0% { transform: translate3d(0, 0, 0); }
+        100% { transform: translate3d(-100%, 0, 0); }
+      }
+
+      @keyframes s-hero-move-to-top {
+        0% { transform: translate3d(0, 0, 0); }
+        100% { transform: translate3d(0, -100%, 0); }
+      }
+
+      @keyframes s-hero-move-to-bottom {
+        0% { transform: translate3d(0, 0, 0); }
+        100% { transform: translate3d(0, 100%, 0); }
       }
     }
   }

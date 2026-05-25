@@ -1,8 +1,16 @@
 ---
 const menu = [
   {
-    url: '/about',
+    id: 'about',
     text: 'About',
+  },
+  {
+    id: 'work',
+    text: 'Work',
+  },
+  {
+    id: 'contact',
+    text: 'Contact',
   },
 ]
 ---
@@ -42,7 +50,7 @@ const menu = [
         {
           menu.map((item) => (
             <li class="sb__item js-menu-item">
-              <a href={item.url || '#' + item.id} class="js-menu-link">
+              <a href={'#' + item.id} class="js-menu-link">
                 <span class="sb__text">{item.text}</span>
               </a>
             </li>
@@ -378,17 +386,15 @@ const menu = [
      * Move to section
      */
     moveToSection(e) {
-      const href = e.currentTarget.getAttribute('href')
+      e.preventDefault()
 
-      if (href.startsWith('#')) {
-        e.preventDefault()
+      const id = e.currentTarget.getAttribute('href')
 
-        window.lenis.scrollTo(href, {
-          duration: 1.5,
-          easing: (t) =>
-            t < 0.5 ? 16 * t * t * t * t * t : 1 + 16 * --t * t * t * t * t,
-        })
-      }
+      window.lenis.scrollTo(id, {
+        duration: 1.5,
+        easing: (t) =>
+          t < 0.5 ? 16 * t * t * t * t * t : 1 + 16 * --t * t * t * t * t,
+      })
     }
 
     /**
