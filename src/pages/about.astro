@@ -99,19 +99,19 @@ import Layout from '../layouts/Layout.astro'
       gap: 20px;
       flex-wrap: wrap;
 
-      span {
-        font: 700 7.5rem / 1 font-family(bigger);
-        letter-spacing: -4px;
+      > span {
+        font-weight: 700;
+        font-size: 7.5rem;
+        line-height: 1;
+        font-family: font-family(bigger);
         display: inline-block;
 
         @include mq(tablet) {
           font-size: 4rem;
-          letter-spacing: -2px;
         }
 
         @include mq(phone) {
           font-size: 2.5rem;
-          letter-spacing: -1px;
         }
       }
     }
