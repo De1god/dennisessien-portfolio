@@ -4,48 +4,42 @@ import Layout from '../layouts/Layout.astro'
 
 <Layout title="About – Creative Designer">
   <div class="intro-scroll">
-    <p>Scroll to explore</p>
+    <h1>Scroll to explore</h1>
   </div>
 
   <div class="lines-container">
     <div class="line">
-      <span>Hello, I'm</span>
+      <span>Hello, i'm</span>
       <span class="img-span">
         <img src="https://i.pinimg.com/1200x/93/27/65/932765c7cd00055218ba7398119d7d4d.jpg" alt="" />
       </span>
     </div>
     <div class="line">
-      <span>products and</span>
+      <span>Dennis, a Ui/Ux designer</span>
       <span class="img-span">
         <img src="https://i.pinimg.com/736x/a9/f1/19/a9f11909a9644d7bfd5102fabcd8310c.jpg" alt="" />
       </span>
     </div>
     <div class="line">
-      <span>websites rooted</span>
+      <span>from nigeria</span>
       <span class="img-span">
         <img src="https://i.pinimg.com/1200x/48/09/77/480977567d6b4503c8f642728f266b72.jpg" alt="" />
       </span>
     </div>
     <div class="line">
-      <span>in clarity</span>
+      <span>creating solutions to products</span>
     </div>
     <div class="line">
-      <span>and quiet</span>
+      <span>nice to meet you</span>
       <span class="img-span">
         <img src="https://i.pinimg.com/1200x/9e/f2/b7/9ef2b73b1e2ff489f99bc0a90196fbea.jpg" alt="" />
       </span>
     </div>
-    <div class="line">
-      <span>confidence.</span>
-    </div>
   </div>
 
   <section class="page-about">
-    <div class="page__inner">
-      <p>For over 6 years, I've collaborated with founders, studios, and product teams across Europe, Africa, and the US to design products and websites rooted in clarity and quiet confidence.</p>
-
-      <p>I've led a full brand and website refresh for a San Francisco start-up to improve clarity and conversion, and driven product design across core workflows while building a scalable Design System for a Munich SaaS company.</p>
-    </div>
+    <p>For over 6 years, I've collaborated with founders, studios, and product teams across Europe, Africa, and the US to design products and websites rooted in clarity and quiet confidence.</p>
+    <p>I've led a full brand and website refresh for a San Francisco start-up to improve clarity and conversion, and driven product design across core workflows while building a scalable Design System for a Munich SaaS company.</p>
   </section>
 </Layout>
 
@@ -80,18 +74,19 @@ import Layout from '../layouts/Layout.astro'
     justify-content: center;
     align-items: center;
 
-    p {
-      font: 300 0.875rem / 1 'Inter', sans-serif;
+    h1 {
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      font-weight: 300;
       letter-spacing: 2px;
       text-transform: uppercase;
       color: color(secondary);
       opacity: 0.5;
+      margin: 0;
     }
   }
 
   .lines-container {
-    padding: 0 2rem;
-
     .line {
       display: flex;
       justify-content: center;
@@ -99,19 +94,21 @@ import Layout from '../layouts/Layout.astro'
       gap: 20px;
       flex-wrap: wrap;
 
-      > span {
-        font-weight: 700;
+      span {
         font-size: 7.5rem;
-        line-height: 1;
-        font-family: font-family(bigger);
+        font-weight: 700;
+        letter-spacing: -4px;
         display: inline-block;
+        overflow: hidden;
 
         @include mq(tablet) {
           font-size: 4rem;
+          letter-spacing: -2px;
         }
 
         @include mq(phone) {
           font-size: 2.5rem;
+          letter-spacing: -1px;
         }
       }
     }
@@ -136,10 +133,6 @@ import Layout from '../layouts/Layout.astro'
         border-radius: 5px;
         object-fit: cover;
         object-position: center center;
-
-        @include mq(phone) {
-          width: 160px;
-        }
       }
     }
   }
@@ -148,20 +141,18 @@ import Layout from '../layouts/Layout.astro'
     min-height: 100vh;
     padding: 6rem 2rem;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
 
-    .page__inner {
+    p {
       max-width: 40rem;
+      font: 200 1.5rem / 1.7 font-family(editorial);
+      color: color(secondary);
+      margin: 0 0 2rem;
 
-      p {
-        font: 200 1.5rem / 1.7 font-family(editorial);
-        color: color(secondary);
-        margin: 0 0 2rem;
-
-        &:last-child {
-          margin: 0;
-        }
+      &:last-child {
+        margin: 0;
       }
     }
   }
