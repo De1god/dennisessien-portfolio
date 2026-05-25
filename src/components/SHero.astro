@@ -5,21 +5,27 @@ const totalImages = 15
 const galleryImages = Array.from({ length: totalImages }, (_, i) =>
   `/images/gallery/image-${String(i + 1).padStart(3, '0')}.png`
 )
+const galleryPositions = galleryImages.map((_, i) => {
+  const cols = 8
+  const rows = Math.ceil(totalImages / cols)
+  const col = i % cols
+  const row = Math.floor(i / cols)
+
+  return {
+    top: `${(row / rows) * 80}%`,
+    left: `${(col / cols) * 90}%`,
+  }
+})
 ---
 
 <div class="s-hero" data-intersect>
   <div class="gallery js-gallery">
-    <div class="gallery__header">
-      <div class="gallery__text">
-        <p>In a future</p>
-      </div>
-      <div class="gallery__text">
-        <p>not too distant</p>
-      </div>
-    </div>
     <div class="gallery__grid js-gallery-grid">
-      {galleryImages.map((url) => (
-        <div class="gallery__img">
+      {galleryImages.map((url, i) => (
+        <div
+          class="gallery__img"
+          style={`left: ${galleryPositions[i].left}; top: ${galleryPositions[i].top};`}
+        >
           <img src={url} alt="" />
         </div>
       ))}
@@ -74,7 +80,6 @@ const galleryImages = Array.from({ length: totalImages }, (_, i) =>
   document.addEventListener('intro', () => {
     const el = document.querySelector('.s-hero')
     const imgs = el.querySelectorAll('.gallery__img')
-    const header = el.querySelector('.gallery__header')
     const border = el.querySelector('.js-border')
     const content = el.querySelector('.js-content')
 
@@ -125,14 +130,6 @@ const galleryImages = Array.from({ length: totalImages }, (_, i) =>
       scale: 0,
     }, 0)
 
-    tl.from('p', {
-      y: 40,
-      ease: 'power4.inOut',
-      duration: 1,
-      stagger: { amount: 0.15 },
-      delay: 0.5,
-    }, 0)
-
     tl.to(imgs, {
       scale: 1,
       width: '300px',
@@ -155,17 +152,6 @@ const galleryImages = Array.from({ length: totalImages }, (_, i) =>
           duration: 0.75,
           ease: 'power2.out',
         })
-      },
-    }, 0)
-
-    tl.to('p', {
-      top: '40px',
-      ease: 'power4.inOut',
-      duration: 1,
-      stagger: { amount: 0.15 },
-      delay: 3,
-      onComplete: () => {
-        header.remove()
       },
     }, 0)
   })
@@ -194,31 +180,6 @@ const galleryImages = Array.from({ length: totalImages }, (_, i) =>
       flex-shrink: 1;
       overflow: hidden;
       background: color(primary);
-
-      &__header {
-        position: absolute;
-        width: 100%;
-        top: 50%;
-        transform: translateY(-50%);
-        display: flex;
-        justify-content: space-around;
-        z-index: 2;
-        pointer-events: none;
-      }
-
-      &__text {
-        position: relative;
-        width: max-content;
-        height: max-content;
-        padding: 10px;
-
-        p {
-          position: relative;
-          font: 200 1rem / 1 font-family(editorial);
-          color: color(secondary);
-          margin: 0;
-        }
-      }
 
       &__grid {
         width: 100%;
