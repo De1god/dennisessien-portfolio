@@ -1,5 +1,12 @@
 ---
 import ASeparator from './ASeparator.astro'
+
+const galleryImages = Object.values(
+  import.meta.glob('../assets/gallery/*.{png,jpg,jpeg}', {
+    eager: true,
+    import: 'default',
+  })
+)
 ---
 
 <div class="s-hero" data-intersect>
@@ -13,20 +20,11 @@ import ASeparator from './ASeparator.astro'
       </div>
     </div>
     <div class="gallery__grid js-gallery-grid">
-      <div class="gallery__img"><img src="/images/gallery/01.png" alt="" /></div>
-      <div class="gallery__img"><img src="/images/gallery/02.png" alt="" /></div>
-      <div class="gallery__img"><img src="/images/gallery/03.png" alt="" /></div>
-      <div class="gallery__img"><img src="/images/gallery/04.png" alt="" /></div>
-      <div class="gallery__img"><img src="/images/gallery/05.jpeg" alt="" /></div>
-      <div class="gallery__img"><img src="/images/gallery/06.jpeg" alt="" /></div>
-      <div class="gallery__img"><img src="/images/gallery/07.jpeg" alt="" /></div>
-      <div class="gallery__img"><img src="/images/gallery/08.jpeg" alt="" /></div>
-      <div class="gallery__img"><img src="/images/gallery/09.jpeg" alt="" /></div>
-      <div class="gallery__img"><img src="/images/gallery/10.png" alt="" /></div>
-      <div class="gallery__img"><img src="/images/gallery/11.jpeg" alt="" /></div>
-      <div class="gallery__img"><img src="/images/gallery/01.png" alt="" /></div>
-      <div class="gallery__img"><img src="/images/gallery/02.png" alt="" /></div>
-      <div class="gallery__img"><img src="/images/gallery/03.png" alt="" /></div>
+      {galleryImages.map((url) => (
+        <div class="gallery__img">
+          <img src={url} alt="" />
+        </div>
+      ))}
     </div>
   </div>
 
@@ -60,22 +58,20 @@ import ASeparator from './ASeparator.astro'
 <script>
   import { gsap } from 'gsap'
 
-  const positions = [
-    { top: '0%', left: '0%' },
-    { top: '0%', left: '10%' },
-    { top: '0%', left: '60%' },
-    { top: '16%', left: '15%' },
-    { top: '16%', left: '40%' },
-    { top: '16%', left: '90%' },
-    { top: '32%', left: '50%' },
-    { top: '32%', left: '75%' },
-    { top: '48%', left: '0%' },
-    { top: '64%', left: '30%' },
-    { top: '64%', left: '50%' },
-    { top: '64%', left: '90%' },
-    { top: '80%', left: '20%' },
-    { top: '80%', left: '70%' },
-  ]
+  function generatePositions(count) {
+    const cols = 8
+    const rows = Math.ceil(count / cols)
+    const positions = []
+    for (let i = 0; i < count; i++) {
+      const col = i % cols
+      const row = Math.floor(i / cols)
+      positions.push({
+        top: `${(row / rows) * 80}%`,
+        left: `${(col / cols) * 90}%`,
+      })
+    }
+    return positions
+  }
 
   document.addEventListener('intro', () => {
     const el = document.querySelector('.s-hero')
@@ -148,6 +144,7 @@ import ASeparator from './ASeparator.astro'
       ease: 'power2.out',
       delay: 1,
       onComplete: () => {
+        const positions = generatePositions(imgs.length)
         gsap.to(imgs, {
           top: (i) => positions[i].top,
           left: (i) => positions[i].left,
