@@ -38,16 +38,20 @@ import Layout from '../../layouts/Layout.astro'
       </div>
 
       <div class="project-detail__gallery">
-        <img src="/images/projects/xtoken/desktop view1.webp" alt="Desktop view 1" />
-        <img src="/images/projects/xtoken/desktop view2.webp" alt="Desktop view 2" />
-        <img src="/images/projects/xtoken/desktop view3.webp" alt="Desktop view 3" />
-        <img src="/images/projects/xtoken/desktop view4.webp" alt="Desktop view 4" />
-        <img src="/images/projects/xtoken/desktop modal1.webp" alt="Desktop modal 1" />
-        <img src="/images/projects/xtoken/desktop modal2.webp" alt="Desktop modal 2" />
-        <img src="/images/projects/xtoken/desktop modal3.webp" alt="Desktop modal 3" />
-        <img src="/images/projects/xtoken/desktop modal4.avif" alt="Desktop modal 4" />
-        <img src="/images/projects/xtoken/desktop modal5.webp" alt="Desktop modal 5" />
-        <img src="/images/projects/xtoken/desktop modal6.webp" alt="Desktop modal 6" />
+        <div class="project-detail__grid project-detail__grid--2x2">
+          <img src="/images/projects/xtoken/desktop view1.webp" alt="Desktop view 1" />
+          <img src="/images/projects/xtoken/desktop view2.webp" alt="Desktop view 2" />
+          <img src="/images/projects/xtoken/desktop view3.webp" alt="Desktop view 3" />
+          <img src="/images/projects/xtoken/desktop view4.webp" alt="Desktop view 4" />
+        </div>
+        <div class="project-detail__grid project-detail__grid--3x2">
+          <img src="/images/projects/xtoken/desktop modal1.webp" alt="Desktop modal 1" />
+          <img src="/images/projects/xtoken/desktop modal2.webp" alt="Desktop modal 2" />
+          <img src="/images/projects/xtoken/desktop modal3.webp" alt="Desktop modal 3" />
+          <img src="/images/projects/xtoken/desktop modal4.avif" alt="Desktop modal 4" />
+          <img src="/images/projects/xtoken/desktop modal5.webp" alt="Desktop modal 5" />
+          <img src="/images/projects/xtoken/desktop modal6.webp" alt="Desktop modal 6" />
+        </div>
       </div>
     </div>
   </section>
@@ -147,11 +151,24 @@ import Layout from '../../layouts/Layout.astro'
       margin-top: 3rem;
       display: flex;
       flex-direction: column;
-      gap: 1.5rem;
+      gap: 2rem;
+    }
+
+    &__grid {
+      display: grid;
+      gap: 1rem;
 
       img {
         width: 100%;
         border-radius: 4px;
+      }
+
+      &--2x2 {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      &--3x2 {
+        grid-template-columns: repeat(3, 1fr);
       }
     }
   }
