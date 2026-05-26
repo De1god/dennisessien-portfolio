@@ -11,19 +11,19 @@ import Layout from '../layouts/Layout.astro'
     <div class="line">
       <span>Hello, i'm</span>
       <span class="img-span">
-        <img src="https://i.pinimg.com/1200x/93/27/65/932765c7cd00055218ba7398119d7d4d.jpg" alt="" />
+        <img class="fit-height" src="/assets/images/image%20(1).png" alt="" />
       </span>
     </div>
     <div class="line">
       <span>Dennis, a Ui/Ux designer</span>
       <span class="img-span">
-        <img src="https://i.pinimg.com/736x/a9/f1/19/a9f11909a9644d7bfd5102fabcd8310c.jpg" alt="" />
+        <img class="fit-height" src="/assets/images/image%20(3).png" alt="" />
       </span>
     </div>
     <div class="line">
       <span>from nigeria</span>
       <span class="img-span">
-        <img src="https://i.pinimg.com/1200x/48/09/77/480977567d6b4503c8f642728f266b72.jpg" alt="" />
+        <img class="fit-height" src="/assets/images/image%20(2).jpg" alt="" />
       </span>
     </div>
     <div class="line">
@@ -32,9 +32,13 @@ import Layout from '../layouts/Layout.astro'
     <div class="line">
       <span>nice to meet you</span>
       <span class="img-span">
-        <img src="https://i.pinimg.com/1200x/9e/f2/b7/9ef2b73b1e2ff489f99bc0a90196fbea.jpg" alt="" />
+        <img src="/assets/images/image%20(4).jpg" alt="" />
       </span>
     </div>
+  </div>
+
+  <div class="image-viewer" aria-hidden="true">
+    <img src="" alt="" />
   </div>
 
   <section class="page-about">
@@ -97,6 +101,34 @@ import Layout from '../layouts/Layout.astro'
         })
       }
     })
+
+    const viewer = document.querySelector('.image-viewer') as HTMLElement
+    const viewerImg = viewer?.querySelector('img')
+
+    if (viewer && viewerImg) {
+      document.querySelectorAll('.img-span img').forEach((img) => {
+        img.addEventListener('click', () => {
+          viewerImg.src = (img as HTMLImageElement).src
+          viewerImg.alt = (img as HTMLImageElement).alt
+          viewer.classList.add('active')
+          viewer.setAttribute('aria-hidden', 'false')
+        })
+      })
+
+      const closeViewer = () => {
+        viewer.classList.remove('active')
+        viewer.setAttribute('aria-hidden', 'true')
+        viewerImg.src = ''
+      }
+
+      viewer.addEventListener('click', closeViewer)
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && viewer.classList.contains('active')) {
+          closeViewer()
+        }
+      })
+    }
   })
 </script>
 
@@ -166,7 +198,44 @@ import Layout from '../layouts/Layout.astro'
         border-radius: 5px;
         object-fit: cover;
         object-position: center center;
+        cursor: zoom-in;
       }
+
+      img.fit-height {
+        width: 100%;
+        object-fit: contain;
+      }
+    }
+  }
+
+  .image-viewer {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba(10, 10, 10, 0.85);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+
+    &.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    img {
+      position: static;
+      width: auto;
+      height: auto;
+      max-width: min(92vw, 1100px);
+      max-height: 88vh;
+      transform: none;
+      object-fit: contain;
+      cursor: zoom-out;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
     }
   }
 
