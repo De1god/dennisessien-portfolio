@@ -10,10 +10,12 @@ import Layout from '../layouts/Layout.astro'
 
       <div class="page__grid">
         <a href="#" class="project">
-          <div class="project__thumb" style="background: #1a1a2e;"></div>
+          <div class="project__thumb" style="background: #1a1a2e;">
+            <img src="/images/xtoken-thumbnail.avif" alt="Xtoken" />
+          </div>
           <div class="project__info">
-            <h3 class="project__title">Project One</h3>
-            <span class="project__tag">UI Design</span>
+            <h3 class="project__title">Xtoken</h3>
+            <span class="project__tag">a dao platform</span>
           </div>
         </a>
 
@@ -111,6 +113,13 @@ import Layout from '../layouts/Layout.astro'
       &__thumb {
         aspect-ratio: 4 / 3;
         width: 100%;
+        overflow: hidden;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
       }
 
       &__info {
