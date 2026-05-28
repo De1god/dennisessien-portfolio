@@ -5,28 +5,25 @@ import Layout from '../layouts/Layout.astro'
 <Layout title="About – Creative Designer">
   <div class="lines-container">
     <div class="line">
-      <span>Hello, i'm</span>
+      <span>Hello, I'm Dennis</span>
       <span class="img-span">
         <img class="fit-height" src="/assets/images/image%20(1).png" alt="Dennis Essien portrait photo" />
       </span>
-    </div>
-    <div class="line">
-      <span>Dennis, a Ui/Ux designer</span>
       <span class="img-span">
         <img class="fit-height" src="/assets/images/image%20(3).png" alt="Dennis Essien working on a design project" />
       </span>
     </div>
     <div class="line">
-      <span>from nigeria</span>
+      <span>a Ui/Ux designer from Nigeria</span>
       <span class="img-span">
         <img class="fit-height" src="/assets/images/image%20(2).jpg" alt="Nigerian cityscape" />
       </span>
     </div>
     <div class="line">
-      <span>creating solutions to products</span>
+      <span>Creating solutions to products</span>
     </div>
     <div class="line">
-      <span>nice to meet you</span>
+      <span>Nice to meet you</span>
       <span class="img-span">
         <img src="/assets/images/image%20(4).jpg" alt="Design workspace with tools and sketches" />
       </span>
@@ -84,11 +81,11 @@ import Layout from '../layouts/Layout.astro'
   window.addEventListener('load', () => {
     const isPhone = window.innerWidth <= 576
     const isTablet = window.innerWidth <= 987 && !isPhone
-    const imgWidth = isPhone ? 140 : isTablet ? 220 : 300
+    const imgWidth = isPhone ? 120 : isTablet ? 200 : 280
 
     document.querySelectorAll('.line').forEach((line) => {
-      const imgSpan = line.querySelector('.img-span')
-      if (imgSpan) {
+      const imgSpans = line.querySelectorAll('.img-span')
+      imgSpans.forEach((imgSpan) => {
         gsap.to(imgSpan, {
           width: imgWidth,
           ease: 'none',
@@ -99,7 +96,7 @@ import Layout from '../layouts/Layout.astro'
             scrub: 1,
           },
         })
-      }
+      })
     })
 
     const viewer = document.querySelector('.image-viewer') as HTMLElement
@@ -184,7 +181,7 @@ import Layout from '../layouts/Layout.astro'
 
       img {
         height: 100%;
-        width: 300px;
+        width: 280px;
         position: absolute;
         left: 50%;
         transform: translateX(-50%);
@@ -194,11 +191,11 @@ import Layout from '../layouts/Layout.astro'
         cursor: zoom-in;
 
         @include mq(tablet) {
-          width: 220px;
+          width: 200px;
         }
 
         @include mq(phone) {
-          width: 140px;
+          width: 120px;
         }
       }
 
