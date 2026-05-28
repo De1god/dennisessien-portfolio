@@ -35,7 +35,7 @@ const galleryPositions = galleryImages.map((_, i) => {
   <div class="s__content js-content">
     <ASeparator
       class="s__separator js-separator"
-      strings={['Ant', 'oi', 'ne', 'Wo', 'dn', 'ia', 'ck']}
+      strings={['Den', 'nis', 'Es', 'si', 'en']}
     />
 
     <h1 class="s__title">
@@ -77,7 +77,9 @@ const galleryPositions = galleryImages.map((_, i) => {
     return positions
   }
 
+  let heroIntros = 0
   document.addEventListener('intro', () => {
+    if (heroIntros++) return
     const el = document.querySelector('.s-hero')
     const imgs = el.querySelectorAll('.gallery__img')
     const border = el.querySelector('.js-border')
@@ -143,14 +145,12 @@ const galleryPositions = galleryImages.map((_, i) => {
         gsap.to(imgs, {
           top: (i) => positions[i].top,
           left: (i) => positions[i].left,
-          xPercent: 0,
-          yPercent: 0,
-          transform: 'none',
           width: '75px',
           height: '100px',
           stagger: 0.075,
           duration: 0.75,
           ease: 'power2.out',
+          clearProps: 'transform',
         })
       },
     }, 0)
