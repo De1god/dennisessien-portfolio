@@ -1074,7 +1074,7 @@ const menu = [
         transform-origin: center;
       }
 
-      .is-menu-open & {
+      :global(.is-menu-open) & {
         .sb-hamburger__line {
           &:nth-child(1) {
             transform: translateY(7px) rotate(45deg);
@@ -1101,7 +1101,7 @@ const menu = [
       pointer-events: none;
       transition: opacity 0.4s ease(in-out-expo);
 
-      .is-menu-open & {
+      :global(.is-menu-open) & {
         opacity: 0.4;
         pointer-events: auto;
       }
@@ -1124,7 +1124,7 @@ const menu = [
       transform: translate3d(100%, 0, 0);
       transition: transform 0.4s ease(in-out-expo);
 
-      .is-menu-open & {
+      :global(.is-menu-open) & {
         transform: translate3d(0, 0, 0);
       }
 
