@@ -1,0 +1,389 @@
+---
+import ASeparator from './ASeparator.astro'
+
+const totalImages = 15
+const galleryImages = Array.from({ length: totalImages }, (_, i) =>
+  `/images/gallery/image-${String(i + 1).padStart(3, '0')}.webp`
+)
+const galleryPositions = galleryImages.map((_, i) => {
+  const cols = 8
+  const rows = Math.ceil(totalImages / cols)
+  const col = i % cols
+  const row = Math.floor(i / cols)
+
+  return {
+    top: `${(row / rows) * 80}%`,
+    left: `${(col / cols) * 90}%`,
+  }
+})
+---
+
+<div class="s-hero" data-intersect>
+  <div class="gallery js-gallery">
+    <div class="gallery__grid js-gallery-grid">
+      {galleryImages.map((url, i) => (
+        <div
+          class="gallery__img"
+          style={`left: ${galleryPositions[i].left}; top: ${galleryPositions[i].top};`}
+        >
+          <img src={url} alt="" loading="lazy" />
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div class="s__content js-content">
+    <ASeparator
+      class="s__separator js-separator"
+      strings={['Den', 'nis', 'Es', 'si', 'en']}
+    />
+
+    <h1 class="s__title">
+      <span class="s__title__word js-word">Creative</span>
+      <img
+        class="s__title__asset js-star"
+        src="/images/asset-star.svg"
+        alt=""
+        width="48"
+        height="48"
+      />
+      <span class="s__title__word js-word">Designer</span>
+    </h1>
+
+    <ASeparator
+      class="s__separator js-separator"
+      strings={['Do', 'Things', 'Your', 'Way']}
+    />
+  </div>
+
+  <div class="s__border js-border"></div>
+</div><!-- .s-hero -->
+
+<script>
+  import { gsap } from 'gsap'
+
+  function generatePositions(count) {
+    const cols = 8
+    const rows = Math.ceil(count / cols)
+    const positions = []
+    for (let i = 0; i < count; i++) {
+      const col = i % cols
+      const row = Math.floor(i / cols)
+      positions.push({
+        top: `${(row / rows) * 80}%`,
+        left: `${(col / cols) * 90}%`,
+      })
+    }
+    return positions
+  }
+
+  let heroIntros = 0
+  document.addEventListener('intro', () => {
+    if (heroIntros++) return
+    const el = document.querySelector('.s-hero')
+    const imgs = el.querySelectorAll('.gallery__img')
+    const border = el.querySelector('.js-border')
+    const content = el.querySelector('.js-content')
+
+    const tl = gsap.timeline()
+
+    tl.set(el, { opacity: 1 }, 0)
+
+    tl.to(
+      border,
+      {
+        scaleY: 0.025,
+        y: -content.clientHeight,
+        duration: 1,
+        ease: 'expo.inOut',
+      },
+      0
+    )
+
+    tl.fromTo(
+      content,
+      {
+        clipPath: 'polygon(0 0, 100% 0, 100% 0, 0 0)',
+      },
+      {
+        clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)',
+        duration: 1,
+        ease: 'expo.inOut',
+      },
+      1
+    )
+
+    tl.to(
+      border,
+      {
+        scaleY: 1,
+        y: 0,
+        duration: 1,
+        ease: 'expo.inOut',
+      },
+      1
+    )
+
+    tl.set(imgs, {
+      top: '45%',
+      left: '50%',
+      xPercent: -50,
+      yPercent: -50,
+      scale: 0,
+    }, 0)
+
+    tl.to(imgs, {
+      scale: 1,
+      width: '300px',
+      height: '400px',
+      stagger: 0.15,
+      duration: 0.75,
+      ease: 'power2.out',
+      delay: 1,
+      onComplete: () => {
+        const positions = generatePositions(imgs.length)
+        gsap.to(imgs, {
+          top: (i) => positions[i].top,
+          left: (i) => positions[i].left,
+          width: '75px',
+          height: '100px',
+          stagger: 0.075,
+          duration: 0.75,
+          ease: 'power2.out',
+          clearProps: 'transform',
+        })
+      },
+    }, 0)
+  })
+</script>
+
+<style lang="scss">
+  .s-hero {
+    @include flex(column, stretch, stretch);
+
+    position: relative;
+    z-index: 4;
+
+    min-height: calc(100svh - 7rem - 1px);
+
+    opacity: 0;
+    overflow: hidden;
+
+    @include mq(phone) {
+      min-height: calc(100svh - 4.5rem - 1px);
+    }
+
+    .gallery {
+      position: relative;
+      width: 100%;
+      flex-grow: 1;
+      flex-shrink: 1;
+      overflow: hidden;
+      background: color(primary);
+
+      &__grid {
+        width: 100%;
+        height: 100%;
+        position: relative;
+      }
+
+      &__img {
+        width: 75px;
+        height: 100px;
+        overflow: hidden;
+        position: absolute;
+        margin: 20px;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+    }
+
+    .s__border {
+      position: absolute;
+      top: 100%;
+      left: 0;
+
+      width: 100%;
+      height: 40 * 1rem;
+
+      background: color(secondary);
+      transform-origin: 50% 0;
+
+      @include mq(phone) {
+        height: 40 * 0.5rem;
+      }
+    }
+
+    .s__content {
+      position: relative;
+
+      overflow: hidden;
+      transform-origin: 50% 100%;
+
+      &:before {
+        position: absolute;
+        top: 0;
+        left: 0;
+
+        width: 100%;
+        height: 1px;
+
+        background: color(secondary);
+
+        content: '';
+      }
+    }
+
+    .s__title,
+    .s__separator {
+      flex-grow: 0;
+      flex-shrink: 0;
+    }
+
+    .s__title {
+      @include flex(row, center, center);
+
+      margin: 0;
+      padding: 1.5rem 0;
+
+      cursor: default;
+
+      font: 700 min(15vw, 18.5rem) / 0.8 font-family(bigger);
+      text-transform: uppercase;
+
+      @include mq(desktop-xs) {
+        font-size: 14vw;
+      }
+
+      @include mq(tablet) {
+        padding: 1rem;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+
+        font-size: calc(31vw - 1rem);
+      }
+
+      @include mq(phone) {
+        font-size: calc(31vw - 0.75rem);
+      }
+
+      &__word {
+        position: relative;
+
+        display: block;
+        height: 0.7975em;
+
+        @include mq(tablet) {
+          flex-grow: 0;
+          flex-shrink: 0;
+        }
+
+        @include mq(phone) {
+          height: 0.825em;
+        }
+      }
+
+      &__asset {
+        display: block;
+        margin: 0 2rem;
+
+        @include mq(tablet) {
+          margin: 0 0 0 auto;
+          width: 0.375em;
+          height: auto;
+        }
+      }
+
+      :global(.char) {
+        clip-path: inset(0 0.005em);
+        color: transparent;
+      }
+
+      :global(.char__inner) {
+        position: relative;
+        top: 0.0725em;
+        display: block;
+        color: transparent;
+        will-change: transform;
+
+        @at-root {
+          :global(.is-windows) &,
+          :global(.is-android) & {
+            top: 0.1025em;
+
+            @include mq(phone) {
+              top: 0.105em;
+            }
+          }
+
+          :global(.is-firefox) & {
+            top: 0.1015em;
+          }
+        }
+
+        &:before {
+          position: absolute;
+          top: 0;
+          left: 50%;
+          transform: translate3d(-50%, 0, 0);
+          color: color(secondary);
+          content: attr(data-letter) attr(data-letter) attr(data-letter);
+        }
+
+        &:after {
+          position: absolute;
+          top: 50%;
+          left: 0;
+          transform: translate3d(0, -50%, 0);
+          color: color(secondary);
+          word-break: break-all;
+          content: attr(data-letter) attr(data-letter) attr(data-letter);
+        }
+      }
+
+      :global(.char--t) {
+        margin-left: -0.035em;
+      }
+
+      :global(.to-top .char__inner) {
+        animation: s-hero-move-to-top 1s ease(in-out-quint) 1 forwards;
+      }
+
+      :global(.to-right .char__inner) {
+        animation: s-hero-move-to-right 1s ease(in-out-quint) 1 forwards;
+      }
+
+      :global(.to-bottom .char__inner) {
+        animation: s-hero-move-to-bottom 1s ease(in-out-quint) 1 forwards;
+      }
+
+      :global(.to-left .char__inner) {
+        animation: s-hero-move-to-left 1s ease(in-out-quint) 1 forwards;
+      }
+
+      @keyframes s-hero-move-to-left {
+        0% { transform: translate3d(0, 0, 0); }
+        100% { transform: translate3d(100%, 0, 0); }
+      }
+
+      @keyframes s-hero-move-to-right {
+        0% { transform: translate3d(0, 0, 0); }
+        100% { transform: translate3d(-100%, 0, 0); }
+      }
+
+      @keyframes s-hero-move-to-top {
+        0% { transform: translate3d(0, 0, 0); }
+        100% { transform: translate3d(0, -100%, 0); }
+      }
+
+      @keyframes s-hero-move-to-bottom {
+        0% { transform: translate3d(0, 0, 0); }
+        100% { transform: translate3d(0, 100%, 0); }
+      }
+    }
+  }
+</style>

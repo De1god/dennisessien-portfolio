@@ -1,0 +1,288 @@
+---
+import Layout from '../layouts/Layout.astro'
+---
+
+<Layout title="About – Creative Designer">
+  <div class="lines-container">
+    <div class="line">
+      <span>Hello, I'm Dennis</span>
+      <span class="img-span">
+        <img class="fit-height" src="/assets/images/image%20(1).png" alt="Dennis Essien portrait photo" />
+      </span>
+      <span class="img-span">
+        <img class="fit-height" src="/assets/images/image%20(3).png" alt="Dennis Essien working on a design project" />
+      </span>
+    </div>
+    <div class="line">
+      <span>a Ui/Ux designer from Nigeria</span>
+      <span class="img-span">
+        <img class="fit-height" src="/assets/images/image%20(2).jpg" alt="Nigerian cityscape" />
+      </span>
+    </div>
+    <div class="line">
+      <span>Creating solutions to products</span>
+    </div>
+    <div class="line">
+      <span>Nice to meet you</span>
+      <span class="img-span">
+        <img src="/assets/images/image%20(4).jpg" alt="Design workspace with tools and sketches" />
+      </span>
+    </div>
+  </div>
+
+  <div class="image-viewer" role="dialog" aria-modal="true" aria-label="Image viewer" tabindex="-1">
+    <img src="" alt="" />
+  </div>
+
+  <section class="page-about">
+    <p>For over 6 years, I've collaborated with founders, studios, and product teams across Europe, Africa, and the US to design products and websites rooted in clarity and quiet confidence.</p>
+    <p>I've led a full brand and website refresh for a San Francisco start-up to improve clarity and conversion, and driven product design across core workflows while building a scalable Design System for a Munich SaaS company.</p>
+
+    <div class="about-lists">
+      <div class="about-list">
+        <h2>WORKED WITH</h2>
+        <ul>
+          <li>eDiye</li>
+          <li>LevChary</li>
+          <li>Oni-ile</li>
+          <li>Outbound</li>
+          <li>Buff TV</li>
+        </ul>
+      </div>
+      <div class="about-list">
+        <h2>EXPERTISE</h2>
+        <ul>
+          <li>Product UX/UI</li>
+          <li>Web Design</li>
+          <li>Shopify Development</li>
+          <li>Framer Developer</li>
+          <li>Email Design</li>
+        </ul>
+      </div>
+      <div class="about-list">
+        <h2>STACK</h2>
+        <ul>
+          <li>Figma</li>
+          <li>Framer</li>
+          <li>Affinity Design</li>
+          <li>ProtoPie</li>
+          <li>Photoshop</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  import { gsap } from 'gsap'
+  import { ScrollTrigger } from 'gsap/ScrollTrigger'
+  gsap.registerPlugin(ScrollTrigger)
+
+  window.addEventListener('load', () => {
+    const isPhone = window.innerWidth <= 576
+    const isTablet = window.innerWidth <= 987 && !isPhone
+    const imgWidth = isPhone ? 120 : isTablet ? 200 : 280
+
+    document.querySelectorAll('.line').forEach((line) => {
+      const imgSpans = line.querySelectorAll('.img-span')
+      imgSpans.forEach((imgSpan) => {
+        gsap.to(imgSpan, {
+          width: imgWidth,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: line,
+            start: 'top 90%',
+            end: 'top 40%',
+            scrub: 1,
+          },
+        })
+      })
+    })
+
+    const viewer = document.querySelector('.image-viewer') as HTMLElement
+    const viewerImg = viewer?.querySelector('img')
+
+    if (viewer && viewerImg) {
+      let lastFocused: HTMLElement | null = null
+
+      document.querySelectorAll('.img-span img').forEach((img) => {
+        img.addEventListener('click', () => {
+          lastFocused = img as HTMLElement
+          viewerImg.src = (img as HTMLImageElement).src
+          viewerImg.alt = (img as HTMLImageElement).alt
+          viewer.classList.add('active')
+          viewer.focus()
+        })
+      })
+
+      const closeViewer = () => {
+        viewer.classList.remove('active')
+        viewerImg.src = ''
+        if (lastFocused) lastFocused.focus()
+      }
+
+      viewer.addEventListener('click', closeViewer)
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && viewer.classList.contains('active')) {
+          closeViewer()
+        }
+      })
+    }
+  })
+</script>
+
+<style lang="scss">
+  .lines-container {
+    .line {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+
+      @include mq(phone) {
+        gap: 10px;
+      }
+
+      span {
+        font-size: 7.5rem;
+        font-weight: 700;
+        letter-spacing: -4px;
+        display: inline-block;
+        overflow: hidden;
+
+        @include mq(tablet) {
+          font-size: 4rem;
+          letter-spacing: -2px;
+        }
+
+        @include mq(phone) {
+          font-size: 1.75rem;
+          letter-spacing: -0.5px;
+        }
+      }
+    }
+
+    .img-span {
+      height: 110px;
+      width: 0;
+      border-radius: 5px;
+      overflow: hidden;
+      position: relative;
+
+      @include mq(tablet) {
+        height: 80px;
+      }
+
+      @include mq(phone) {
+        height: 50px;
+      }
+
+      img {
+        height: 100%;
+        width: 280px;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 5px;
+        object-fit: cover;
+        object-position: center center;
+        cursor: zoom-in;
+
+        @include mq(tablet) {
+          width: 200px;
+        }
+
+        @include mq(phone) {
+          width: 120px;
+        }
+      }
+
+      img.fit-height {
+        width: 100%;
+        object-fit: contain;
+      }
+    }
+  }
+
+  .image-viewer {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba(10, 10, 10, 0.85);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+
+    &.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    img {
+      position: static;
+      width: auto;
+      height: auto;
+      max-width: min(92vw, 1100px);
+      max-height: 88vh;
+      transform: none;
+      object-fit: contain;
+      cursor: zoom-out;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+    }
+  }
+
+  .page-about {
+    min-height: 100vh;
+    padding: 6rem 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    p {
+      max-width: 40rem;
+      font: 200 1.5rem / 1.7 font-family(editorial);
+      color: color(secondary);
+      margin: 0 0 2rem;
+    }
+  }
+
+  .about-lists {
+    display: flex;
+    gap: 6rem;
+    margin-top: 4rem;
+    max-width: 40rem;
+    width: 100%;
+
+    @include mq(phone) {
+      flex-direction: column;
+      gap: 3rem;
+    }
+  }
+
+  .about-list {
+    h2 {
+      font: 700 0.75rem / 1 font-family(fraktion);
+      letter-spacing: 0.15em;
+      color: color(secondary);
+      margin: 0 0 1rem;
+    }
+
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+
+      li {
+        font: 200 1.25rem / 1.8 font-family(editorial);
+        color: color(secondary);
+      }
+    }
+  }
+</style>

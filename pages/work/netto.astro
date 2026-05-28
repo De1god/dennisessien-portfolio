@@ -1,0 +1,134 @@
+---
+import Layout from '../../layouts/Layout.astro'
+---
+
+<Layout title="Netto – Work">
+  <section class="project-detail">
+    <div class="project-detail__inner">
+      <a href="/work" class="project-detail__back">← Back</a>
+
+      <div class="project-detail__header">
+        <div class="project-detail__thumb">
+          <img src="/images/projects/netto.webp" alt="Netto supermarket onboarding platform overview" />
+        </div>
+        <div class="project-detail__intro">
+          <h1 class="project-detail__title">Netto</h1>
+          <p class="project-detail__tagline">supermarket chain</p>
+        </div>
+      </div>
+
+      <div class="project-detail__meta">
+        <div class="project-detail__meta-item">
+          <span class="project-detail__meta-label">Year</span>
+          <span class="project-detail__meta-value">2021</span>
+        </div>
+        <div class="project-detail__meta-item">
+          <span class="project-detail__meta-label">Industry</span>
+          <span class="project-detail__meta-value">Web3</span>
+        </div>
+        <div class="project-detail__meta-item">
+          <span class="project-detail__meta-label">Service</span>
+          <span class="project-detail__meta-value">Ui/Ux Design</span>
+        </div>
+      </div>
+
+      <div class="project-detail__content">
+        <p>Netto is a German discount supermarket chain with over 4,200 stores, Focuses on affordable food and household items, competing with chains like Aldi and Lidl.</p>
+        <p>During the redesign process of their website I was part of a bigger team as a UX Designer. I have worked on the information architecture, conducted interviews, created user flows, built wireframes and prototypes that kicked off the design process.</p>
+        <p>Traces of my UX work can still be found on their website today.</p>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style lang="scss">
+  .project-detail {
+    padding: 4rem 2rem 6rem;
+
+    &__inner {
+      max-width: 50rem;
+      margin: 0 auto;
+    }
+
+    &__back {
+      display: inline-block;
+      margin-bottom: 2rem;
+      font: 400 0.875rem / 1 font-family(fraktion);
+      color: color(secondary);
+      opacity: 0.6;
+      text-decoration: none;
+      transition: opacity 0.2s;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+
+    &__header {
+      margin-bottom: 2.5rem;
+    }
+
+    &__thumb {
+      width: 100%;
+      max-height: 24rem;
+      overflow: hidden;
+      margin-bottom: 2rem;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
+    &__title {
+      margin: 0 0 0.5rem;
+      font: 700 3.5rem / 0.9 font-family(bigger);
+      text-transform: uppercase;
+      color: color(secondary);
+    }
+
+    &__tagline {
+      margin: 0;
+      font: 200 1.25rem / 1.5 font-family(editorial);
+      color: color(secondary);
+      opacity: 0.7;
+    }
+
+    &__meta {
+      display: flex;
+      gap: 3rem;
+      margin-bottom: 3rem;
+      padding: 1.5rem 0;
+      border-top: 1px solid color(secondary);
+      border-bottom: 1px solid color(secondary);
+    }
+
+    &__meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    &__meta-label {
+      font: 700 0.7rem / 1 font-family(fraktion);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: color(secondary);
+      opacity: 0.5;
+    }
+
+    &__meta-value {
+      font: 400 1rem / 1 font-family(fraktion);
+      color: color(secondary);
+    }
+
+    &__content {
+      p {
+        font: 200 1.25rem / 1.7 font-family(editorial);
+        color: color(secondary);
+        margin: 0 0 1.5rem;
+      }
+    }
+  }
+</style>
