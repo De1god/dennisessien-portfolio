@@ -3,7 +3,7 @@ import ASeparator from './ASeparator.astro'
 
 const totalImages = 15
 const galleryImages = Array.from({ length: totalImages }, (_, i) =>
-  `/images/gallery/image-${String(i + 1).padStart(3, '0')}.png`
+  `/images/gallery/image-${String(i + 1).padStart(3, '0')}.webp`
 )
 const galleryPositions = galleryImages.map((_, i) => {
   const cols = 8
@@ -26,7 +26,7 @@ const galleryPositions = galleryImages.map((_, i) => {
           class="gallery__img"
           style={`left: ${galleryPositions[i].left}; top: ${galleryPositions[i].top};`}
         >
-          <img src={url} alt="" />
+          <img src={url} alt="" loading="lazy" />
         </div>
       ))}
     </div>

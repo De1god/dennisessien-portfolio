@@ -3,10 +3,6 @@ import Layout from '../layouts/Layout.astro'
 ---
 
 <Layout title="About – Creative Designer">
-  <div class="intro-scroll">
-    <h1>Scroll to explore</h1>
-  </div>
-
   <div class="lines-container">
     <div class="line">
       <span>Hello, i'm</span>
@@ -133,24 +129,6 @@ import Layout from '../layouts/Layout.astro'
 </script>
 
 <style lang="scss">
-  .intro-scroll {
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    h1 {
-      font-family: 'Inter', sans-serif;
-      font-size: 1rem;
-      font-weight: 300;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: color(secondary);
-      opacity: 0.5;
-      margin: 0;
-    }
-  }
-
   .lines-container {
     .line {
       display: flex;
