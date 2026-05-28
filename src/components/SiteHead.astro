@@ -36,7 +36,7 @@ const menu = [
           </path>
         </svg>
 
-        <span class="u-sr-only">Antoine Wodniack</span>
+        <span class="u-sr-only">Dennis Essien</span>
       </a>
     </div><!-- .sb-logo -->
 
@@ -99,6 +99,12 @@ const menu = [
       <span class="u-sr-only">Change contrast</span>
     </button><!-- .sb-contrast -->
 
+    <button class="sb-hamburger js-hamburger" type="button" aria-label="Toggle menu">
+      <span class="sb-hamburger__line"></span>
+      <span class="sb-hamburger__line"></span>
+      <span class="sb-hamburger__line"></span>
+    </button>
+
     <aside class="sb-availability">
       <p>
         <span class="sb__line">
@@ -123,6 +129,36 @@ const menu = [
       <img src="/images/qr-code.svg?v=2" alt="QR Code" width="72" height="72" />
     </a><!-- .sb-qr-code -->
   </div><!-- .site-head__container -->
+
+  <div class="sb-mobile js-mobile-menu">
+    <nav class="sb-mobile__nav">
+      <ul class="sb-mobile__list">
+        {
+          menu.map((item) => (
+            <li class="sb-mobile__item">
+              <a href={item.url || '#' + item.id} class="js-menu-link">
+                <span>{item.text}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+    <div class="sb-mobile__socials">
+      <a href="https://instagram.com/dennis.e.e" target="_blank" rel="noopener">
+        <span class="u-sr-only">Instagram</span>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" fill="currentColor"/>
+        </svg>
+      </a>
+      <a href="https://www.linkedin.com/in/dennis-essien-2b8484230/" target="_blank" rel="noopener">
+        <span class="u-sr-only">LinkedIn</span>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M1.13025 14.9839H3.93671V4.6H1.13025V14.9839ZM2.53348 0.0161285C1.598 0.0161285 0.849609 0.764516 0.849609 1.7C0.849609 2.63548 1.598 3.38387 2.53348 3.38387C3.46896 3.38387 4.21735 2.63548 4.21735 1.7C4.21735 0.764516 3.46896 0.0161285 2.53348 0.0161285ZM8.70767 6.19032V4.6H5.90122V14.9839H8.70767V9.65161C8.70767 6.65806 12.5432 6.47097 12.5432 9.65161V14.9839H15.3496V8.62258C15.3496 3.57097 10.0174 3.75806 8.70767 6.19032Z" fill="currentColor"/>
+        </svg>
+      </a>
+    </div>
+  </div>
 </header>
 
 <script>
@@ -157,6 +193,8 @@ const menu = [
       this.console = document.querySelector('.js-console')
       this.contrastMask = document.querySelector('.js-contrast-mask')
       this.links = this.el.querySelectorAll('.js-menu-link')
+      this.hamburger = document.querySelector('.js-hamburger')
+      this.mobileMenu = document.querySelector('.js-mobile-menu')
 
       // Properties
       this.messages = [
@@ -259,6 +297,18 @@ const menu = [
       this.links.forEach((link) => {
         link.addEventListener('click', this.moveToSection.bind(this))
       })
+
+      if (this.hamburger) {
+        this.hamburger.addEventListener('click', this.toggleMenu.bind(this), {
+          passive: true,
+        })
+      }
+
+      if (this.mobileMenu) {
+        this.mobileMenu.querySelectorAll('a').forEach((link) => {
+          link.addEventListener('click', this.closeMenu.bind(this))
+        })
+      }
 
       document.addEventListener('intro', this.intro.bind(this), { once: true })
 
@@ -399,6 +449,20 @@ const menu = [
             t < 0.5 ? 16 * t * t * t * t * t : 1 + 16 * --t * t * t * t * t,
         })
       }
+    }
+
+    /**
+     * Toggle mobile menu
+     */
+    toggleMenu() {
+      document.documentElement.classList.toggle('is-menu-open')
+    }
+
+    /**
+     * Close mobile menu
+     */
+    closeMenu() {
+      document.documentElement.classList.remove('is-menu-open')
     }
 
     /**
@@ -959,6 +1023,119 @@ const menu = [
           top / 100% 12.5% repeat;
 
         content: '';
+      }
+    }
+
+    .sb-hamburger {
+      display: none;
+      position: relative;
+      z-index: 15;
+      width: 4rem;
+      height: 6rem;
+      padding: 0;
+      border: 0;
+      border-left: 1px solid color(secondary);
+      background: transparent;
+      cursor: pointer;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+
+      @include mq(phone) {
+        height: 4rem;
+        width: 3rem;
+      }
+
+      &__line {
+        display: block;
+        width: 20px;
+        height: 2px;
+        background: color(secondary);
+        transition: transform 0.3s ease(in-out-expo);
+      }
+
+      .is-menu-open & {
+        &__line:nth-child(1) {
+          transform: translateY(7px) rotate(45deg);
+        }
+        &__line:nth-child(2) {
+          opacity: 0;
+        }
+        &__line:nth-child(3) {
+          transform: translateY(-7px) rotate(-45deg);
+        }
+      }
+
+      @include mq(tablet) {
+        display: flex;
+      }
+    }
+
+    .sb-mobile {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 10;
+      width: 100%;
+      height: 100%;
+      background: color(primary);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3rem;
+      transform: translate3d(0, -100%, 0);
+      transition: transform 0.5s ease(in-out-expo);
+      pointer-events: none;
+
+      .is-menu-open & {
+        transform: translate3d(0, 0, 0);
+        pointer-events: auto;
+      }
+
+      &__nav {
+        ul {
+          list-style: none;
+          margin: 0;
+          padding: 0;
+          text-align: center;
+        }
+
+        li {
+          margin-bottom: 1.5rem;
+        }
+
+        a {
+          font: 700 3rem / 1 font-family(bigger);
+          color: color(secondary);
+          text-decoration: none;
+          text-transform: uppercase;
+          transition: opacity 0.2s;
+
+          &:hover {
+            opacity: 0.6;
+          }
+
+          @include mq(phone) {
+            font-size: 2rem;
+          }
+        }
+      }
+
+      &__socials {
+        display: flex;
+        gap: 1.5rem;
+
+        a {
+          color: color(secondary);
+          opacity: 0.6;
+          transition: opacity 0.2s;
+
+          &:hover {
+            opacity: 1;
+          }
+        }
       }
     }
   }
