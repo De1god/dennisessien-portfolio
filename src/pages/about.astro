@@ -33,7 +33,7 @@ import Layout from '../layouts/Layout.astro'
     </div>
   </div>
 
-  <div class="image-viewer" aria-hidden="true">
+  <div class="image-viewer" role="dialog" aria-modal="true" aria-label="Image viewer" tabindex="-1">
     <img src="" alt="" />
   </div>
 
@@ -102,19 +102,22 @@ import Layout from '../layouts/Layout.astro'
     const viewerImg = viewer?.querySelector('img')
 
     if (viewer && viewerImg) {
+      let lastFocused: HTMLElement | null = null
+
       document.querySelectorAll('.img-span img').forEach((img) => {
         img.addEventListener('click', () => {
+          lastFocused = img as HTMLElement
           viewerImg.src = (img as HTMLImageElement).src
           viewerImg.alt = (img as HTMLImageElement).alt
           viewer.classList.add('active')
-          viewer.setAttribute('aria-hidden', 'false')
+          viewer.focus()
         })
       })
 
       const closeViewer = () => {
         viewer.classList.remove('active')
-        viewer.setAttribute('aria-hidden', 'true')
         viewerImg.src = ''
+        if (lastFocused) lastFocused.focus()
       }
 
       viewer.addEventListener('click', closeViewer)
