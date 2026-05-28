@@ -455,7 +455,13 @@ const menu = [
      * Toggle mobile menu
      */
     toggleMenu() {
-      document.documentElement.classList.toggle('is-menu-open')
+      const isOpen = this.el.classList.toggle('is-menu-open')
+      document.body.style.overflow = isOpen ? 'hidden' : ''
+    }
+
+    closeMenu() {
+      this.el.classList.remove('is-menu-open')
+      document.body.style.overflow = ''
     }
 
     /**
@@ -1061,6 +1067,20 @@ const menu = [
       }
     }
 
+    .is-menu-open & {
+      .sb-hamburger {
+        &__line:nth-child(1) {
+          transform: translateY(7px) rotate(45deg);
+        }
+        &__line:nth-child(2) {
+          opacity: 0;
+        }
+        &__line:nth-child(3) {
+          transform: translateY(-7px) rotate(-45deg);
+        }
+      }
+    }
+
     .sb-mobile {
       position: fixed;
       top: 0;
@@ -1122,28 +1142,12 @@ const menu = [
         }
       }
     }
-  }
 
-  :global(.is-menu-open) {
-    body {
-      overflow: hidden;
-    }
-
-    .sb-hamburger {
-      &__line:nth-child(1) {
-        transform: translateY(7px) rotate(45deg);
+    &.is-menu-open {
+      .sb-mobile {
+        transform: translate3d(0, 0, 0);
+        pointer-events: auto;
       }
-      &__line:nth-child(2) {
-        opacity: 0;
-      }
-      &__line:nth-child(3) {
-        transform: translateY(-7px) rotate(-45deg);
-      }
-    }
-
-    .sb-mobile {
-      transform: translate3d(0, 0, 0);
-      pointer-events: auto;
     }
   }
 </style>
