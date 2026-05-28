@@ -4,7 +4,7 @@ import Layout from '../layouts/Layout.astro'
 
 <Layout title="About – Creative Designer">
   <div class="lines-container">
-    <div class="line">
+    <div class="line line--vertical">
       <span>Hello, I'm Dennis</span>
       <span class="img-span">
         <img class="fit-height" src="/assets/images/image%20(1).png" alt="Dennis Essien portrait photo" />
@@ -13,13 +13,13 @@ import Layout from '../layouts/Layout.astro'
         <img class="fit-height" src="/assets/images/image%20(3).png" alt="Dennis Essien working on a design project" />
       </span>
     </div>
-    <div class="line">
+    <div class="line line--vertical">
       <span>a Ui/Ux designer from Nigeria</span>
       <span class="img-span">
         <img class="fit-height" src="/assets/images/image%20(2).jpg" alt="Nigerian cityscape" />
       </span>
     </div>
-    <div class="line">
+    <div class="line line--vertical">
       <span>Creating solutions to products</span>
     </div>
     <div class="line">
@@ -143,6 +143,15 @@ import Layout from '../layouts/Layout.astro'
 
       @include mq(phone) {
         gap: 10px;
+      }
+
+      &--vertical {
+        flex-direction: column;
+        gap: 10px;
+
+        @include mq(phone) {
+          gap: 6px;
+        }
       }
 
       span {
