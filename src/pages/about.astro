@@ -74,12 +74,12 @@ import Layout from '../layouts/Layout.astro'
   gsap.registerPlugin(ScrollTrigger)
 
   window.addEventListener('load', () => {
-    const isPhone = window.innerWidth <= 576
+    const isPhone = window.innerWidth <= 767
     const isTablet = window.innerWidth <= 987 && !isPhone
-    const imgWidth = isPhone ? 120 : isTablet ? 200 : 280
+    const imgWidth = isPhone ? 160 : isTablet ? 200 : 280
 
     document.querySelectorAll('.line').forEach((line) => {
-      const imgSpans = line.querySelectorAll('.img-span')
+      const imgSpans = line.querySelectorAll('.img-span:not(.img-span--hide-mobile)')
       imgSpans.forEach((imgSpan) => {
         if (isPhone) {
           (imgSpan as HTMLElement).style.width = imgWidth + 'px'
@@ -204,7 +204,11 @@ import Layout from '../layouts/Layout.astro'
 
       &--hide-mobile {
         @include mq(phone) {
-          display: none;
+          display: none !important;
+          visibility: hidden;
+          height: 0;
+          width: 0;
+          overflow: hidden;
         }
       }
 
