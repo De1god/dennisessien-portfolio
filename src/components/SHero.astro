@@ -1,17 +1,36 @@
 ---
 import ASeparator from './ASeparator.astro'
 
-const totalImages = 25
+const totalImages = 15
 const galleryImages = Array.from({ length: totalImages }, (_, i) =>
-  `/images/gallery/chromatic/img${i + 1}.jpg`
+  `/images/gallery/image-${String(i + 1).padStart(3, '0')}.webp`
 )
+const galleryPositions = galleryImages.map((_, i) => {
+  const cols = 8
+  const rows = Math.ceil(totalImages / cols)
+  const col = i % cols
+  const row = Math.floor(i / cols)
+
+  return {
+    top: `${(row / rows) * 80}%`,
+    left: `${(col / cols) * 90}%`,
+  }
+})
 ---
 
 <div class="s-hero" data-intersect>
-  <div class="gallery-viewport js-gallery-viewport">
-    <div class="gallery-container js-gallery-container"></div>
+  <div class="gallery js-gallery">
+    <div class="gallery__grid js-gallery-grid">
+      {galleryImages.map((url, i) => (
+        <div
+          class="gallery__img"
+          style={`left: ${galleryPositions[i].left}; top: ${galleryPositions[i].top};`}
+        >
+          <img src={url} alt="" loading="lazy" />
+        </div>
+      ))}
+    </div>
   </div>
-  <canvas class="js-gallery-canvas"></canvas>
 
   <div class="s__content js-content">
     <ASeparator
@@ -43,241 +62,98 @@ const galleryImages = Array.from({ length: totalImages }, (_, i) =>
 <script>
   import { gsap } from 'gsap'
 
-  const imgSources = Array.from(
-    { length: 25 },
-    (_, i) => `/images/gallery/chromatic/img${i + 1}.jpg`
-  )
-
-  function getRandomImage() {
-    return imgSources[Math.floor(Math.random() * imgSources.length)]
-  }
-
-  function createImageGrid(container: HTMLElement) {
-    for (let i = 0; i < 300; i++) {
-      const wrapper = document.createElement('div')
-      wrapper.className = 'img-wrapper'
-
-      const img = document.createElement('img')
-      img.src = getRandomImage()
-      img.alt = ''
-
-      wrapper.appendChild(img)
-      container.appendChild(wrapper)
+  function generatePositions(count) {
+    const cols = 8
+    const rows = Math.ceil(count / cols)
+    const positions = []
+    for (let i = 0; i < count; i++) {
+      const col = i % cols
+      const row = Math.floor(i / cols)
+      positions.push({
+        top: `${(row / rows) * 80}%`,
+        left: `${(col / cols) * 90}%`,
+      })
     }
+    return positions
   }
 
   let heroIntros = 0
   document.addEventListener('intro', () => {
     if (heroIntros++) return
-    const el = document.querySelector('.s-hero') as HTMLElement
-    const content = el.querySelector('.js-content') as HTMLElement
-    const border = el.querySelector('.js-border') as HTMLElement
-    const viewport = el.querySelector('.js-gallery-viewport') as HTMLElement
-    const container = el.querySelector('.js-gallery-container') as HTMLElement
-    const canvas = el.querySelector('.js-gallery-canvas') as HTMLCanvasElement
+    const el = document.querySelector('.s-hero')
+    const imgs = el.querySelectorAll('.gallery__img')
+    const border = el.querySelector('.js-border')
+    const content = el.querySelector('.js-content')
 
-    // Show hero
-    el.style.opacity = '1'
-
-    // Animate border and content reveal
     const tl = gsap.timeline()
-      tl.set(el, { opacity: 1 }, 0)
 
-      tl.to(border, {
+    tl.set(el, { opacity: 1 }, 0)
+
+    tl.to(
+      border,
+      {
         scaleY: 0.025,
         y: -content.clientHeight,
         duration: 1,
         ease: 'expo.inOut',
-      }, 0)
+      },
+      0
+    )
 
-      tl.fromTo(content, {
+    tl.fromTo(
+      content,
+      {
         clipPath: 'polygon(0 0, 100% 0, 100% 0, 0 0)',
-      }, {
+      },
+      {
         clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)',
         duration: 1,
         ease: 'expo.inOut',
-      }, 1)
+      },
+      1
+    )
 
-      tl.to(border, {
+    tl.to(
+      border,
+      {
         scaleY: 1,
         y: 0,
         duration: 1,
         ease: 'expo.inOut',
-      }, 1)
+      },
+      1
+    )
 
-    // Init chromatic aberration gallery
-    createImageGrid(container)
+    tl.set(imgs, {
+      top: '45%',
+      left: '50%',
+      xPercent: -50,
+      yPercent: -50,
+      scale: 0,
+    }, 0)
 
-    let mouseX = window.innerWidth / 2
-    let mouseY = window.innerHeight / 2
-    let targetMouseX = mouseX
-    let targetMouseY = mouseY
-    let targetX = 0
-    let targetY = 0
-    let currentX = 0
-    let currentY = 0
-
-    const gl = canvas.getContext('webgl', {
-      preserveDrawingBuffer: false,
-      antialias: true,
-      alpha: true,
-    })
-
-    if (!gl) return
-
-    gl.enable(gl.BLEND)
-    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
-
-    function createShader(type, source) {
-      const shader = gl.createShader(type)
-      gl.shaderSource(shader, source)
-      gl.compileShader(shader)
-      if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-        console.error('Shader error:', gl.getShaderInfoLog(shader))
-        gl.deleteShader(shader)
-        return null
-      }
-      return shader
-    }
-
-    async function loadShaders() {
-      const [vertexRes, fragmentRes] = await Promise.all([
-        fetch('/shaders/vertex.glsl'),
-        fetch('/shaders/fragment.glsl'),
-      ])
-      return {
-        vertexSource: await vertexRes.text(),
-        fragmentSource: await fragmentRes.text(),
-      }
-    }
-
-    async function initWebGL() {
-      const { vertexSource, fragmentSource } = await loadShaders()
-      const vertexShader = createShader(gl.VERTEX_SHADER, vertexSource)
-      const fragmentShader = createShader(gl.FRAGMENT_SHADER, fragmentSource)
-
-      const program = gl.createProgram()
-      gl.attachShader(program, vertexShader)
-      gl.attachShader(program, fragmentShader)
-      gl.linkProgram(program)
-      gl.useProgram(program)
-
-      const vertices = new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1])
-      const vertexBuffer = gl.createBuffer()
-      gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer)
-      gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW)
-
-      const positionLocation = gl.getAttribLocation(program, 'aPosition')
-      gl.enableVertexAttribArray(positionLocation)
-      gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0)
-
-      const texture = gl.createTexture()
-      gl.activeTexture(gl.TEXTURE0)
-      gl.bindTexture(gl.TEXTURE_2D, texture)
-      gl.uniform1i(gl.getUniformLocation(program, 'iChannel0'), 0)
-
-      return { program, texture }
-    }
-
-    function updateTexture(program, texture) {
-      const tempCanvas = document.createElement('canvas')
-      const scale = 4
-      tempCanvas.width = Math.floor(window.innerWidth * scale)
-      tempCanvas.height = Math.floor(window.innerHeight * scale)
-      const tempCtx = tempCanvas.getContext('2d')
-
-      tempCtx.imageSmoothingEnabled = true
-      tempCtx.imageSmoothingQuality = 'high'
-      tempCtx.fillStyle = 'white'
-      tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height)
-
-      const viewportRect = viewport.getBoundingClientRect()
-      const matrix = new DOMMatrix(getComputedStyle(container).transform)
-
-      tempCtx.setTransform(
-        matrix.a, matrix.b, matrix.c, matrix.d,
-        matrix.e * scale, matrix.f * scale
-      )
-
-      const images = container.getElementsByTagName('img')
-      for (const img of images) {
-        const parent = img.parentElement.getBoundingClientRect()
-        tempCtx.drawImage(
-          img,
-          (parent.left - viewportRect.left) * scale,
-          (parent.top - viewportRect.top) * scale,
-          parent.width * scale,
-          parent.height * scale
-        )
-      }
-
-      tempCtx.setTransform(1, 0, 0, 1, 0, 0)
-
-      gl.bindTexture(gl.TEXTURE_2D, texture)
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, tempCanvas)
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR)
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE)
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE)
-    }
-
-    function animatePan() {
-      const ease = 0.035
-      currentX += (targetX - currentX) * ease
-      currentY += (targetY - currentY) * ease
-      container.style.transform = `translate(${currentX}px, ${currentY}px)`
-      requestAnimationFrame(animatePan)
-    }
-
-    function render(program, texture) {
-      const ease = 0.1
-      mouseX += (targetMouseX - mouseX) * ease
-      mouseY += (targetMouseY - mouseY) * ease
-
-      canvas.width = window.innerWidth
-      canvas.height = window.innerHeight
-      gl.viewport(0, 0, canvas.width, canvas.height)
-
-      updateTexture(program, texture)
-
-      gl.uniform2f(gl.getUniformLocation(program, 'iResolution'), canvas.width, canvas.height)
-      gl.uniform2f(gl.getUniformLocation(program, 'iMouse'), mouseX, canvas.height - mouseY)
-
-      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4)
-      requestAnimationFrame(() => render(program, texture))
-    }
-
-    function updatePan(x, y) {
-      const maxX = container.offsetWidth - window.innerWidth
-      const maxY = container.offsetHeight - window.innerHeight
-      targetX = -((x / window.innerWidth) * maxX * 0.75)
-      targetY = -((y / window.innerHeight) * maxY * 0.75)
-    }
-
-    initWebGL().then(({ program, texture }) => {
-      document.addEventListener('mousemove', (e) => {
-        targetMouseX = e.clientX
-        targetMouseY = e.clientY
-        updatePan(e.clientX, e.clientY)
-      })
-
-      window.addEventListener('resize', () => {
-        canvas.width = window.innerWidth
-        canvas.height = window.innerHeight
-        gl.viewport(0, 0, canvas.width, canvas.height)
-        targetMouseX = window.innerWidth / 2
-        targetMouseY = window.innerHeight / 2
-        mouseX = targetMouseX
-        mouseY = targetMouseY
-        targetX = 0
-        targetY = 0
-        currentX = 0
-        currentY = 0
-      })
-
-      animatePan()
-      render(program, texture)
-    })
+    tl.to(imgs, {
+      scale: 1,
+      width: '300px',
+      height: '400px',
+      stagger: 0.15,
+      duration: 0.75,
+      ease: 'power2.out',
+      delay: 1,
+      onComplete: () => {
+        const positions = generatePositions(imgs.length)
+        gsap.to(imgs, {
+          top: (i) => positions[i].top,
+          left: (i) => positions[i].left,
+          width: '75px',
+          height: '100px',
+          stagger: 0.075,
+          duration: 0.75,
+          ease: 'power2.out',
+          clearProps: 'transform',
+        })
+      },
+    }, 0)
   })
 </script>
 
@@ -297,51 +173,33 @@ const galleryImages = Array.from({ length: totalImages }, (_, i) =>
       min-height: calc(100svh - 4.5rem - 1px);
     }
 
-    .gallery-viewport {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
+    .gallery {
+      position: relative;
+      width: 100%;
+      flex-grow: 1;
+      flex-shrink: 1;
       overflow: hidden;
-    }
+      background: color(primary);
 
-    .gallery-container {
-      position: absolute;
-      width: 200vw;
-      height: 200vh;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-      gap: 4px;
-      padding: 4px;
-      transform: translate(0, 0);
-      will-change: transform;
-
-      :global(.img-wrapper) {
-        position: relative;
+      &__grid {
         width: 100%;
-        padding-bottom: 100%;
+        height: 100%;
+        position: relative;
+      }
+
+      &__img {
+        width: 75px;
+        height: 100px;
         overflow: hidden;
+        position: absolute;
+        margin: 20px;
 
         img {
-          position: absolute;
-          top: 0;
-          left: 0;
           width: 100%;
           height: 100%;
           object-fit: cover;
         }
       }
-    }
-
-    .js-gallery-canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 1000;
     }
 
     .s__border {
