@@ -98,6 +98,17 @@ const galleryImages = Array.from({ length: totalImages }, (_, i) =>
       },
       1
     )
+
+    const gallery = el.querySelector('.gallery')
+    const track = el.querySelector('.gallery__track')
+    if (gallery && track) {
+      gallery.addEventListener('mouseenter', () => {
+        track.style.animationPlayState = 'paused'
+      })
+      gallery.addEventListener('mouseleave', () => {
+        track.style.animationPlayState = 'running'
+      })
+    }
   })
 </script>
 
@@ -129,10 +140,10 @@ const galleryImages = Array.from({ length: totalImages }, (_, i) =>
         display: flex;
         gap: 20px;
         width: max-content;
-        animation: scroll-gallery 30s linear infinite;
+        animation: scroll-gallery 50s linear infinite;
 
         @include mq(phone) {
-          animation-duration: 20s;
+          animation-duration: 35s;
         }
       }
 
