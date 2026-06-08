@@ -10,7 +10,7 @@ import Layout from '../layouts/Layout.astro'
     </div>
     <div class="line">
       <span>a Ui/Ux designer from Nigeria</span>
-      <span class="img-span">
+      <span class="img-span img-span--hide-mobile">
         <img class="fit-height" src="/assets/images/image%20(2).jpg" alt="Nigerian cityscape" />
       </span>
     </div>
@@ -19,7 +19,7 @@ import Layout from '../layouts/Layout.astro'
     </div>
     <div class="line">
       <span>Nice to meet you</span>
-      <span class="img-span">
+      <span class="img-span img-span--hide-mobile">
         <img src="/assets/images/image%20(4).jpg" alt="Design workspace with tools and sketches" />
       </span>
     </div>
@@ -200,6 +200,12 @@ import Layout from '../layouts/Layout.astro'
       @include mq(phone) {
         height: 160px;
         width: 160px;
+      }
+
+      &--hide-mobile {
+        @include mq(phone) {
+          display: none;
+        }
       }
 
       img {
