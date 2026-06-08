@@ -440,13 +440,6 @@ const menu = [
             } else {
               document.documentElement.classList.add('theme-contrasted')
             }
-
-            Emitter.emit(
-              'contrastchange',
-              document.documentElement.classList.contains('theme-contrasted')
-                ? 'contrasted'
-                : 'default'
-            )
           },
         }
       )

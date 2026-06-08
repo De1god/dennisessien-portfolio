@@ -38,8 +38,6 @@
       this.isDragging = false
 
       // Init
-      document.documentElement.classList.add('has-scrollbar')
-
       this.bindEvents()
     }
 
@@ -201,10 +199,6 @@
         opacity 0.07s linear;
 
       will-change: opacity, scale, transform;
-
-      @at-root .is-transitioning & {
-        scale: 0 1;
-      }
 
       &:before {
         position: absolute;

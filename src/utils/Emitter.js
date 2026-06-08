@@ -37,16 +37,6 @@ class Emitter {
   }
 
   /**
-   * Single event handler
-   * @param {String} name Event name
-   * @param {Function} callback Handler function
-   * @param {Object} context Context
-   */
-  once (name, callback, context) {
-    this.on(name, callback, context, true)
-  }
-
-  /**
    * Emit event
    * @param {String} name Event Name
    */

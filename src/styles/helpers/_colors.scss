@@ -13,10 +13,6 @@
 
     @return rgba($color, $alpha);
   } @else {
-    @if $key == 'gradient' {
-      @return map.get($theme-colors, $key);
-    }
-
     @return var(--color-#{$key});
   }
 }

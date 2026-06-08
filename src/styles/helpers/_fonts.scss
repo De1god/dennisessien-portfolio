@@ -7,11 +7,6 @@
   @return var(--font-family-#{$key});
 }
 
-/* Get a font size value */
-@function font-size($key) {
-  @return var(--font-size-#{$key});
-}
-
 /* Return a text style */
 @mixin t($key: base) {
   margin: 0;
