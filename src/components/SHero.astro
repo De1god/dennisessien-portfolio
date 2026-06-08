@@ -5,27 +5,18 @@ const totalImages = 15
 const galleryImages = Array.from({ length: totalImages }, (_, i) =>
   `/images/gallery/image-${String(i + 1).padStart(3, '0')}.webp`
 )
-const galleryPositions = galleryImages.map((_, i) => {
-  const cols = 8
-  const rows = Math.ceil(totalImages / cols)
-  const col = i % cols
-  const row = Math.floor(i / cols)
-
-  return {
-    top: `${(row / rows) * 80}%`,
-    left: `${(col / cols) * 90}%`,
-  }
-})
 ---
 
 <div class="s-hero" data-intersect>
   <div class="gallery js-gallery">
-    <div class="gallery__grid js-gallery-grid">
-      {galleryImages.map((url, i) => (
-        <div
-          class="gallery__img"
-          style={`left: ${galleryPositions[i].left}; top: ${galleryPositions[i].top};`}
-        >
+    <div class="gallery__track">
+      {galleryImages.map((url) => (
+        <div class="gallery__img">
+          <img src={url} alt="" loading="lazy" />
+        </div>
+      ))}
+      {galleryImages.map((url) => (
+        <div class="gallery__img">
           <img src={url} alt="" loading="lazy" />
         </div>
       ))}
@@ -62,26 +53,10 @@ const galleryPositions = galleryImages.map((_, i) => {
 <script>
   import { gsap } from 'gsap'
 
-  function generatePositions(count) {
-    const cols = 8
-    const rows = Math.ceil(count / cols)
-    const positions = []
-    for (let i = 0; i < count; i++) {
-      const col = i % cols
-      const row = Math.floor(i / cols)
-      positions.push({
-        top: `${(row / rows) * 80}%`,
-        left: `${(col / cols) * 90}%`,
-      })
-    }
-    return positions
-  }
-
   let heroIntros = 0
   document.addEventListener('intro', () => {
     if (heroIntros++) return
     const el = document.querySelector('.s-hero')
-    const imgs = el.querySelectorAll('.gallery__img')
     const border = el.querySelector('.js-border')
     const content = el.querySelector('.js-content')
 
@@ -123,37 +98,6 @@ const galleryPositions = galleryImages.map((_, i) => {
       },
       1
     )
-
-    tl.set(imgs, {
-      top: '45%',
-      left: '50%',
-      xPercent: -50,
-      yPercent: -50,
-      scale: 0,
-    }, 0)
-
-    tl.to(imgs, {
-      scale: 1,
-      width: '300px',
-      height: '400px',
-      stagger: 0.15,
-      duration: 0.75,
-      ease: 'power2.out',
-      delay: 1,
-      onComplete: () => {
-        const positions = generatePositions(imgs.length)
-        gsap.to(imgs, {
-          top: (i) => positions[i].top,
-          left: (i) => positions[i].left,
-          width: '75px',
-          height: '100px',
-          stagger: 0.075,
-          duration: 0.75,
-          ease: 'power2.out',
-          clearProps: 'transform',
-        })
-      },
-    }, 0)
   })
 </script>
 
@@ -181,24 +125,42 @@ const galleryPositions = galleryImages.map((_, i) => {
       overflow: hidden;
       background: color(primary);
 
-      &__grid {
-        width: 100%;
-        height: 100%;
-        position: relative;
+      &__track {
+        display: flex;
+        gap: 20px;
+        width: max-content;
+        animation: scroll-gallery 30s linear infinite;
+
+        @include mq(phone) {
+          animation-duration: 20s;
+        }
       }
 
       &__img {
         width: 75px;
         height: 100px;
+        flex-shrink: 0;
         overflow: hidden;
-        position: absolute;
-        margin: 20px;
+
+        @include mq(phone) {
+          width: 50px;
+          height: 66px;
+        }
 
         img {
           width: 100%;
           height: 100%;
           object-fit: cover;
         }
+      }
+    }
+
+    @keyframes scroll-gallery {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-50%);
       }
     }
 
