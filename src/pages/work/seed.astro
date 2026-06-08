@@ -8,7 +8,9 @@ import Layout from '../../layouts/Layout.astro'
       <a href="/work" class="project-detail__back">← Back</a>
 
       <div class="project-detail__header">
-        <div class="project-detail__thumb"></div>
+        <div class="project-detail__thumb">
+          <img src="/images/projects/seed.webp" alt="Seed B2B SaaS platform overview" />
+        </div>
         <div class="project-detail__intro">
           <h1 class="project-detail__title">Seed</h1>
           <p class="project-detail__tagline">B2B SaaS platform</p>
@@ -33,6 +35,11 @@ import Layout from '../../layouts/Layout.astro'
       <div class="project-detail__content">
         <p>Seed is a comprehensive B2B SaaS platform built to streamline complex financial operations. The core design challenge was transforming high-density business data—like invoicing, customer management, and subscription scheduling—into an intuitive, clean user interface.</p>
         <p>By introducing powerful data filtering, seamless user flows for role-based team invitations, and clear notification systems, the final product empowers businesses to manage their critical billing data with total clarity and efficiency.</p>
+      </div>
+
+      <div class="project-detail__gallery">
+        <img src="/images/projects/seed/seed 1.jpeg" alt="Seed platform invoicing interface" />
+        <img src="/images/projects/seed/seed 2.jpeg" alt="Seed platform customer management dashboard" />
       </div>
     </div>
   </section>
@@ -126,6 +133,18 @@ import Layout from '../../layouts/Layout.astro'
         font: 200 1.25rem / 1.7 font-family(editorial);
         color: color(secondary);
         margin: 0 0 1.5rem;
+      }
+    }
+
+    &__gallery {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+
+      img {
+        width: 100%;
+        height: auto;
+        display: block;
       }
     }
   }
