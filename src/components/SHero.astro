@@ -137,14 +137,13 @@ const galleryImages = Array.from({ length: totalImages }, (_, i) =>
       }
 
       &__img {
-        width: 75px;
-        height: 100px;
+        width: auto;
+        height: 80vh;
         flex-shrink: 0;
         overflow: hidden;
 
         @include mq(phone) {
-          width: 50px;
-          height: 66px;
+          height: 60vh;
         }
 
         img {
