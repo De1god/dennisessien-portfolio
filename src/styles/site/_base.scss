@@ -1,0 +1,48 @@
+/**
+ * Global selectors and body/html rules
+ */
+
+@use "../helpers/colors" as *;
+@use "../helpers/fonts" as *;
+
+::selection {
+  background: color(secondary);
+
+  color: color(primary);
+  text-shadow: none;
+}
+
+* {
+  outline: none;
+  box-sizing: border-box;
+}
+
+*:focus-visible {
+  outline: 2px solid color(primary);
+  outline-offset: 2px;
+}
+
+html {
+  @include t(base);
+
+  background-color: color(secondary);
+  scrollbar-width: none;
+
+  color: color(secondary);
+
+  &.is-scroll-blocked {
+    &,
+    body {
+      height: 100lvh;
+      overflow: hidden;
+    }
+  }
+}
+
+body {
+  background-color: color(primary);
+  overflow-x: hidden;
+  overflow-y: visible;
+
+  font-family: inherit;
+}
