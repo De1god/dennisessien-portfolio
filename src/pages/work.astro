@@ -49,7 +49,7 @@ import Layout from '../layouts/Layout.astro'
           </div>
         </a>
 
-        <a href="#" class="project">
+        <a href="#" class="project project--coming-soon" aria-disabled="true" tabindex="-1">
           <div class="project__thumb" style="background: #e94560;"></div>
           <div class="project__info">
             <h3 class="project__title">Email Designs</h3>
@@ -110,10 +110,27 @@ import Layout from '../layouts/Layout.astro'
       display: block;
       background: color(primary);
       text-decoration: none;
-      transition: opacity 0.3s ease;
+      transition: opacity 0.3s ease, transform 0.2s ease;
 
       &:hover {
         opacity: 0.85;
+      }
+
+      &:active {
+        transform: scale(0.98);
+      }
+
+      &--coming-soon {
+        cursor: default;
+        opacity: 0.5;
+
+        &:hover {
+          opacity: 0.5;
+        }
+
+        &:active {
+          transform: none;
+        }
       }
 
       &__thumb {

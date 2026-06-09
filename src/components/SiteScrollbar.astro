@@ -160,8 +160,6 @@
 
     transition: scale 0.5s ease(out-cubic);
 
-    will-change: scale;
-
     @include mq(phone) {
       --border-width: 0.5rem;
     }
@@ -198,8 +196,6 @@
         scale 0.2s ease(out-cubic),
         opacity 0.07s linear;
 
-      will-change: opacity, scale, transform;
-
       &:before {
         position: absolute;
         top: calc(var(--border-width) * -1);
@@ -230,7 +226,6 @@
 
         content: '';
 
-        will-change: background, width;
       }
 
       &:hover {
@@ -256,6 +251,6 @@
   }
 
   html.is-scroll-blocked .site-scrollbar {
-    scale: 0 1;
+    scale: 0.05 1;
   }
 </style>

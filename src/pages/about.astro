@@ -6,10 +6,10 @@ import Layout from '../layouts/Layout.astro'
   <div class="lines-container">
     <div class="line">
       <span>Hello, I'm Dennis</span>
-      <div class="about-portrait" style="background-image: url('/assets/images/about-portrait.png');"></div>
+      <img class="about-portrait" src="/assets/images/about-portrait.png" alt="Dennis Essien portrait" width="280" height="240" />
     </div>
     <div class="line">
-      <span>a Ui/Ux designer from Nigeria</span>
+      <span>a UI/UX designer from Nigeria</span>
       <span class="img-span img-span--hide-mobile">
         <img class="fit-height" src="/assets/images/image%20(2).jpg" alt="Nigerian cityscape" />
       </span>
@@ -26,7 +26,8 @@ import Layout from '../layouts/Layout.astro'
   </div>
 
   <div class="image-viewer" role="dialog" aria-modal="true" aria-label="Image viewer" tabindex="-1">
-    <img src="" alt="" />
+    <button class="image-viewer__close" type="button" aria-label="Close image viewer">&times;</button>
+    <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" />
   </div>
 
   <section class="page-about">
@@ -116,11 +117,17 @@ import Layout from '../layouts/Layout.astro'
 
       const closeViewer = () => {
         viewer.classList.remove('active')
-        viewerImg.src = ''
+        viewerImg.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
+        viewerImg.alt = ''
         if (lastFocused) lastFocused.focus()
       }
 
-      viewer.addEventListener('click', closeViewer)
+      viewer.addEventListener('click', (e) => {
+        if (e.target === viewer || e.target === viewerImg) closeViewer()
+      })
+
+      const closeBtn = viewer.querySelector('.image-viewer__close')
+      if (closeBtn) closeBtn.addEventListener('click', closeViewer)
 
       document.addEventListener('keydown', (event) => {
         if (event.key === 'Escape' && viewer.classList.contains('active')) {
@@ -139,8 +146,7 @@ import Layout from '../layouts/Layout.astro'
       height: 240px;
       width: 280px;
       border-radius: 5px;
-      background-size: cover;
-      background-position: center;
+      object-fit: cover;
       flex-shrink: 0;
 
       @include mq(tablet) {
@@ -262,6 +268,28 @@ import Layout from '../layouts/Layout.astro'
     &.active {
       opacity: 1;
       pointer-events: auto;
+    }
+
+    &__close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      color: #fff;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: background 0.2s ease;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
     }
 
     img {

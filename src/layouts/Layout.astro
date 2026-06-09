@@ -91,6 +91,7 @@ const {
 
   <body>
     <a href="#main-content" class="skip-link">Skip to content</a>
+    <button class="skip-intro-btn js-skip-intro" type="button" aria-label="Skip intro animation">Skip intro</button>
 
     <div class="site-wrapper js-site-wrapper" style="opacity: 0;">
       <SiteHead />
@@ -134,6 +135,8 @@ const {
     import { ScrollTrigger } from 'gsap/ScrollTrigger'
     gsap.registerPlugin(ScrollTrigger)
 
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
     declare global {
       interface Window {
         safeWidth: number
@@ -145,6 +148,7 @@ const {
     }
 
     class Site {
+      introSkipped: boolean = false
       timeouts: any = {
         resizeThrottle: null,
       }
@@ -199,6 +203,38 @@ const {
 
         this.onResize()
         Ticker.nextTick(this.intro, this)
+
+        const skipBtn = document.querySelector('.js-skip-intro')
+        if (skipBtn) {
+          skipBtn.addEventListener('click', () => this.skipIntro())
+        }
+
+        if (prefersReducedMotion) {
+          this.skipIntro()
+        }
+      }
+
+      skipIntro() {
+        if (this.introSkipped) return
+        this.introSkipped = true
+
+        const wrapper = document.querySelector('.js-site-wrapper')
+        const intro = document.querySelector('.js-intro')
+        const mount = document.querySelector('.js-mount')
+
+        if (wrapper) wrapper.removeAttribute('style')
+        if (intro) intro.remove()
+        if (mount) mount.style.opacity = '1'
+
+        document.documentElement.classList.remove('is-scroll-blocked')
+        document.dispatchEvent(new CustomEvent('intro'))
+
+        const skipBtn = document.querySelector('.js-skip-intro')
+        if (skipBtn) skipBtn.remove()
+
+        Ticker.nextTick(() => {
+          Emitter.emit('updateViewport')
+        })
       }
 
       /**
@@ -489,6 +525,33 @@ const {
 
       &:focus-visible {
         transform: translateY(0);
+        outline: 2px solid color(primary);
+        outline-offset: 2px;
+      }
+    }
+
+        .skip-intro-btn {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 60;
+      padding: 0.75rem 1.5rem;
+      background: color(secondary);
+      color: color(primary);
+      font: 700 0.75rem / 1 font-family(fraktion);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border: 1px solid color(primary);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: opacity 0.3s ease;
+
+      &:hover {
+        opacity: 0.8;
+      }
+
+      &:focus-visible {
         outline: 2px solid color(primary);
         outline-offset: 2px;
       }

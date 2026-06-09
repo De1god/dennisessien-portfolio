@@ -10,14 +10,14 @@ const galleryImages = Array.from({ length: totalImages }, (_, i) =>
 <div class="s-hero" data-intersect>
   <div class="gallery js-gallery">
     <div class="gallery__track">
-      {galleryImages.map((url) => (
+      {galleryImages.map((url, i) => (
         <div class="gallery__img">
-          <img src={url} alt="" loading="lazy" />
+          <img src={url} alt={`Design work showcase ${i + 1}`} width="320" height="480" loading={i < 3 ? undefined : "lazy"} />
         </div>
       ))}
-      {galleryImages.map((url) => (
+      {galleryImages.map((url, i) => (
         <div class="gallery__img">
-          <img src={url} alt="" loading="lazy" />
+          <img src={url} alt={`Design work showcase ${i + 1}`} width="320" height="480" loading="lazy" />
         </div>
       ))}
     </div>
@@ -53,9 +53,15 @@ const galleryImages = Array.from({ length: totalImages }, (_, i) =>
 <script>
   import { gsap } from 'gsap'
 
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
   let heroIntros = 0
   document.addEventListener('intro', () => {
     if (heroIntros++) return
+    if (prefersReducedMotion) {
+      document.querySelector('.s-hero')?.setAttribute('style', 'opacity: 1')
+      return
+    }
     const el = document.querySelector('.s-hero')
     const border = el.querySelector('.js-border')
     const content = el.querySelector('.js-content')
