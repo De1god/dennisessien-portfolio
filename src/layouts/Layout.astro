@@ -473,6 +473,9 @@ const {
             mount.style.opacity = '1'
             intro.remove()
 
+            const skipBtn = document.querySelector('.js-skip-intro')
+            if (skipBtn) skipBtn.remove()
+
             document.documentElement.classList.remove('is-scroll-blocked')
 
             Ticker.nextTick(() => {
