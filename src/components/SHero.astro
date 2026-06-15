@@ -144,8 +144,8 @@ const galleryImages = Array.from({ length: totalImages }, (_, i) =>
 
       &__track {
         display: flex;
-        gap: 20px;
         width: max-content;
+        will-change: transform;
         animation: scroll-gallery 50s linear infinite;
 
         @include mq(phone) {
@@ -158,9 +158,11 @@ const galleryImages = Array.from({ length: totalImages }, (_, i) =>
         height: 55vh;
         flex-shrink: 0;
         overflow: hidden;
+        padding-right: 20px;
 
         @include mq(phone) {
           height: 40vh;
+          padding-right: 12px;
         }
 
         img {
