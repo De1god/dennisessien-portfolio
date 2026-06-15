@@ -104,18 +104,42 @@ const galleryImages = Array.from({ length: totalImages }, (_, i) =>
       },
       1
     )
-
-    const gallery = el.querySelector('.gallery')
-    const track = el.querySelector('.gallery__track')
-    if (gallery && track) {
-      gallery.addEventListener('mouseenter', () => {
-        track.style.animationPlayState = 'paused'
-      })
-      gallery.addEventListener('mouseleave', () => {
-        track.style.animationPlayState = 'running'
-      })
-    }
   })
+
+  // JS-driven marquee — immune to Lenis/main-thread stutter
+  const track = document.querySelector('.gallery__track') as HTMLElement
+  const gallery = document.querySelector('.gallery') as HTMLElement
+  if (track && gallery) {
+    let paused = false
+    let offset = 0
+    let lastTime = performance.now()
+    const speed = 0.12 // px per ms
+
+    const halfWidth = () => track.scrollWidth / 2
+
+    const tick = (now: number) => {
+      const dt = now - lastTime
+      lastTime = now
+
+      if (!paused) {
+        offset -= speed * dt
+        if (Math.abs(offset) >= halfWidth()) {
+          offset += halfWidth()
+        }
+        track.style.transform = `translate3d(${offset}px, 0, 0)`
+      }
+
+      requestAnimationFrame(tick)
+    }
+
+    requestAnimationFrame(tick)
+
+    gallery.addEventListener('mouseenter', () => { paused = true })
+    gallery.addEventListener('mouseleave', () => {
+      lastTime = performance.now()
+      paused = false
+    })
+  }
 </script>
 
 <style lang="scss">
@@ -146,11 +170,6 @@ const galleryImages = Array.from({ length: totalImages }, (_, i) =>
         display: flex;
         width: max-content;
         will-change: transform;
-        animation: scroll-gallery 50s linear infinite;
-
-        @include mq(phone) {
-          animation-duration: 50s;
-        }
       }
 
       &__img {
@@ -170,15 +189,6 @@ const galleryImages = Array.from({ length: totalImages }, (_, i) =>
           height: 100%;
           object-fit: cover;
         }
-      }
-    }
-
-    @keyframes scroll-gallery {
-      0% {
-        transform: translateX(0);
-      }
-      100% {
-        transform: translateX(-50%);
       }
     }
 
